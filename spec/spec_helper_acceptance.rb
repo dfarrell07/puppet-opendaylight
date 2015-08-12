@@ -139,7 +139,7 @@ def generic_validations()
       it { should be_mode '644' }
     end
 
-    # Java 7 should be installed
+    # Java 8 should be installed
     describe package('java-1.7.0-openjdk') do
       it { should be_installed }
     end
@@ -169,7 +169,7 @@ def generic_validations()
       it { should be_mode '644' }
     end
 
-    # Java 7 should be installed
+    # Java 8 should be installed
     describe package('openjdk-7-jdk') do
       it { should be_installed }
     end

@@ -200,13 +200,20 @@ def tarball_install_tests(options = {})
     it { should contain_archive('opendaylight-systemd').that_comes_before('File[/usr/lib/systemd/system/opendaylight.service]') }
     it { should contain_file('/usr/lib/systemd/system/opendaylight.service').that_requires('Archive[opendaylight-systemd]') }
 
-    # NB: These hashes don't work with Ruby 1.8.7, but we
-    #   don't support 1.8.7 so that's okay. See issue #36.
-    it {
-      should contain_package('java').with(
-        'name' => 'java-1.7.0-openjdk',
-      )
-    }
+    if operatingsystem == 'Fedora' and operatingsystemmajrelease == '20'
+      it {
+        should contain_package('java').with(
+          'name' => 'java-1.7.0-openjdk',
+        )
+      }
+    else
+      it {
+        should contain_package('java').with(
+          'name' => 'java-1.8.0-openjdk',
+        )
+      }
+    end
+
     it {
       should contain_archive('opendaylight-systemd').with(
         'ensure'           => 'present',
@@ -228,11 +235,20 @@ def tarball_install_tests(options = {})
     }
   when 'Debian'
     # Validations specific to Debain family OSs (Ubuntu)
-    it {
-      should contain_package('java').with(
-        'name' => 'openjdk-7-jdk',
-      )
-    }
+    if operatingsystemmajrelease == '14.04'
+      it {
+        should contain_package('java').with(
+          'name' => 'openjdk-7-jdk'
+        )
+      }
+    else
+      it {
+        should contain_package('java').with(
+          'name' => 'openjdk-8-jdk'
+        )
+      }
+    end
+
     it {
       should contain_file('/etc/init/opendaylight.conf').with(
         'ensure'  => 'file',

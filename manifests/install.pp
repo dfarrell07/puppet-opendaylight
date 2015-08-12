@@ -37,14 +37,37 @@ class opendaylight::install {
     }
   }
   elsif $opendaylight::install_method == 'tarball' {
-    # Install Java 7
-    $package = $::osfamily ? {
-      'RedHat' => 'java-1.7.0-openjdk',
-      'Debian' => 'openjdk-7-jdk',
+    # Select Java version for the target OS
+    # Ubuntu 14.04 and Fedora 20 use Java 7, everything else uses Java 8
+    case $::operatingsystem {
+      centos, redhat: {
+        $java_package = 'java-1.8.0-openjdk'
+      }
+      fedora: {
+        if $::operatingsystemmajrelease == '20' {
+          $java_package = 'java-1.7.0-openjdk'
+        }
+        else {
+          $java_package = 'java-1.8.0-openjdk'
+        }
+      }
+      ubuntu: {
+        if $::operatingsystemmajrelease == '14.04' {
+          $java_package = 'openjdk-7-jdk'
+        }
+        else {
+          $java_package = 'openjdk-8-jdk'
+        }
+      }
+      default: {
+        $java_package = 'java-1.8.0-openjdk'
+        warning("Defaulting to ${java_package}")
+      }
     }
+
+    # Install Java
     class { 'java':
-      # NB: ODL is currently in the process of moving to Java 8
-      package => $package,
+      package => $java_package,
     }
 
     # Create and configure the odl user
