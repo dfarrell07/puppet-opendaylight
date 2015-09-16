@@ -9,28 +9,31 @@
 class opendaylight::install {
   if $opendaylight::install_method == 'rpm' {
     # Choose Yum URL based on OS (CentOS vs Fedora)
+    # NB: Currently using the CentOS CBS for both Fedora and CentOS
     $base_url = $::operatingsystem ? {
-      'CentOS' => 'https://copr-be.cloud.fedoraproject.org/results/dfarrell07/OpenDaylight/epel-7-$basearch/',
-      'Fedora' => 'https://copr-be.cloud.fedoraproject.org/results/dfarrell07/OpenDaylight/fedora-$releasever-$basearch/',
+      'CentOS' => 'http://cbs.centos.org/repos/nfv7-opendaylight-2-candidate/$basearch/os/',
+      'Fedora' => 'http://cbs.centos.org/repos/nfv7-opendaylight-2-candidate/$basearch/os/',
     }
 
     # Add OpenDaylight's Yum repository
-    yumrepo { 'opendaylight':
+    yumrepo { 'opendaylight-2-candidate':
       # 'ensure' isn't supported with Puppet <3.5
       # Seems to default to present, but docs don't say
       # https://docs.puppetlabs.com/references/3.4.0/type.html#yumrepo
       # https://docs.puppetlabs.com/references/3.5.0/type.html#yumrepo
       baseurl  => $base_url,
-      descr    => 'OpenDaylight SDN controller',
-      gpgcheck => 0,
+      descr    => 'CentOS CBS OpenDaylight Helium candidate repository',
       enabled  => 1,
+      # NB: RPM signing is an active TODO, but is not done. We will enable
+      #     this gpgcheck once the RPM supports it.
+      gpgcheck => 0,
       before   => Package['opendaylight'],
     }
 
     # Install the OpenDaylight RPM
     package { 'opendaylight':
       ensure  => present,
-      require => Yumrepo['opendaylight'],
+      require => Yumrepo['opendaylight-2-candidate'],
     }
   }
   elsif $opendaylight::install_method == 'tarball' {

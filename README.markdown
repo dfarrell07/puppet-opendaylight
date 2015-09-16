@@ -34,7 +34,7 @@ module's [params](#parameters). If you need a new knob, [please raise an
 Issue][8].
 
 Both supported [install methods](#install-method) default to the latest
-stable OpenDaylight release, which is currently [Helium 0.2.3 SR3][18].
+stable OpenDaylight release, which is currently [Helium 0.2.4 SR4][18].
 
 ## Setup
 
@@ -62,12 +62,11 @@ with [applying the ODL Puppet module][12] to CentOS 7, Fedora 20 and Fedora
 [~/vagrant-opendaylight]$ vagrant status
 Current machine states:
 
+cent7                     not created (virtualbox)
 cent7_pup_rpm             not created (virtualbox)
+cent7_ansible             not created (virtualbox)
 cent7_pup_tb              not created (virtualbox)
 cent7_rpm                 not created (virtualbox)
-f20_pup_rpm               not created (virtualbox)
-f20_pup_tb                not created (virtualbox)
-f20_rpm                   not created (virtualbox)
 f21_pup_rpm               not created (virtualbox)
 f21_pup_tb                not created (virtualbox)
 f21_rpm                   not created (virtualbox)
@@ -214,7 +213,7 @@ Valid options: A valid port number as a string or integer.
 Specifies the ODL tarball to use when installing via the tarball install
 method.
 
-Default: `'https://nexus.opendaylight.org/content/groups/public/org/opendaylight/integration/distribution-karaf/0.2.3-Helium-SR3/distribution-karaf-0.2.3-Helium-SR3.tar.gz'`
+Default: `'https://nexus.opendaylight.org/content/groups/public/org/opendaylight/integration/distribution-karaf/0.2.4-Helium-SR4/distribution-karaf-0.2.4-Helium-SR4.tar.gz'`
 
 Valid options: A valid URL to an ODL tarball as a string.
 
@@ -269,4 +268,4 @@ See our [git commit history][17] for contributor information.
 [15]: https://github.com/dfarrell07/puppet-opendaylight/blob/master/CHANGELOG
 [16]: https://github.com/dfarrell07/puppet-opendaylight/releases
 [17]: https://github.com/dfarrell07/puppet-opendaylight/commits/master
-[18]: http://www.opendaylight.org/software/downloads/helium-sr3
+[18]: http://www.opendaylight.org/software/downloads/helium-sr4
