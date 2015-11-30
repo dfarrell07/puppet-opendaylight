@@ -143,7 +143,7 @@ def generic_validations()
     describe package('java-1.7.0-openjdk') do
       it { should be_installed }
     end
-  elsif ['centos-7', 'fedora-21'].include? ENV['RS_SET']
+  elsif ['centos-7', 'centos-7-docker', 'fedora-21'].include? ENV['RS_SET']
     # Validations for modern Red Hat family OSs
 
     # Verify ODL systemd .service file
