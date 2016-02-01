@@ -15,4 +15,5 @@ class opendaylight::params {
   $tarball_url = 'https://nexus.opendaylight.org/content/repositories/staging/org/opendaylight/integration/distribution-karaf/0.4.0-Beryllium-RC1/distribution-karaf-0.4.0-Beryllium-RC1.tar.gz'
   $unitfile_url = 'https://github.com/dfarrell07/opendaylight-systemd/archive/master/opendaylight-unitfile.tar.gz'
   $enable_l3 = 'no'
+  $log_levels = {}
 }

@@ -36,4 +36,15 @@ class opendaylight::config {
     # Use a template to populate the content
     content => template('opendaylight/custom.properties.erb'),
   }
+
+  # Set any custom log levels
+  file { 'org.ops4j.pax.logging.cfg':
+    ensure  => file,
+    path    => '/opt/opendaylight/etc/org.ops4j.pax.logging.cfg',
+    # Set user:group owners
+    owner   => 'odl',
+    group   => 'odl',
+    # Use a template to populate the content
+    content => template('opendaylight/org.ops4j.pax.logging.cfg.erb'),
+  }
 }
