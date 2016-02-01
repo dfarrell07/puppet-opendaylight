@@ -1,0 +1,12 @@
+HOSTS:
+  fedora-20-docker:
+    roles:
+      - master
+    platform: fedora-20-x86_64
+    image: fedora:20
+#    docker_cmd: '["/usr/sbin/sshd", "-D"]'
+    hypervisor: docker
+
+CONFIG:
+  log_level: verbose
+  type: foss

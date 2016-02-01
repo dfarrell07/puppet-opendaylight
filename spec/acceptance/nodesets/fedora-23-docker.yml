@@ -1,0 +1,12 @@
+HOSTS:
+  fedora-23-docker:
+    roles:
+      - master
+    platform: fedora-23-x86_64
+    image: fedora:23
+    docker_cmd: '["/usr/sbin/sshd", "-D"]'
+    hypervisor: docker
+
+CONFIG:
+  log_level: verbose
+  type: foss

@@ -1,0 +1,12 @@
+HOSTS:
+  fedora-21-docker:
+    roles:
+      - master
+    platform: fedora-21-x86_64
+    image: fedora:21
+    docker_cmd: '["/sbin/init"]'
+    hypervisor: docker
+
+CONFIG:
+  log_level: verbose
+  type: foss
