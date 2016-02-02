@@ -496,6 +496,46 @@ describe 'opendaylight' do
       # Note that this function is defined in spec_helper
       enable_l3_tests(enable_l3: 'yes')
     end
+
+    context 'using false for enable_l3' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{
+        :enable_l3 => false ,
+      }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking ODL OVSDB L3 config
+      # Note that this function is defined in spec_helper
+      enable_l3_tests(enable_l3: false)
+    end
+
+    context 'using true for enable_l3' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{
+        :enable_l3 => true,
+      }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking ODL OVSDB L3 config
+      # Note that this function is defined in spec_helper
+      enable_l3_tests(enable_l3: true)
+    end
   end
 
   # All install method tests

@@ -16,7 +16,7 @@
 # [*unitfile_url*]
 #   OpenDaylight .service file to use for tarball installs. Defaults to one used by ODL RPM.
 # [*enable_l3*]
-#   Enable or disable ODL OVSDB ML2 L3 forwarding. Valid options are 'yes' and 'no'.
+#   Enable or disable ODL OVSDB ML2 L3 forwarding. Valid: true, false, 'yes' and 'no'.
 # [*log_levels*]
 #   Custom OpenDaylight logger verbosity configuration (TRACE, DEBUG, INFO, WARN, ERROR).
 #

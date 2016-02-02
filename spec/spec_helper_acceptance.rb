@@ -282,11 +282,22 @@ def enable_l3_validations(options = {})
   # TODO: Remove this possible source of bugs^^
   enable_l3 = options.fetch(:enable_l3, 'no')
 
-  describe file('/opt/opendaylight/etc/custom.properties') do
-    it { should be_file }
-    it { should be_owned_by 'odl' }
-    it { should be_grouped_into 'odl' }
-    its(:content) { should match /ovsdb.l3.fwd.enabled=#{enable_l3}/ }
+  if [true, 'yes'].include? enable_l3
+    # Confirm ODL OVSDB L3 is enabled
+    describe file('/opt/opendaylight/etc/custom.properties') do
+      it { should be_file }
+      it { should be_owned_by 'odl' }
+      it { should be_grouped_into 'odl' }
+      its(:content) { should match /^ovsdb.l3.fwd.enabled=yes/ }
+    end
+  elsif [false, 'no'].include? enable_l3
+    # Confirm ODL OVSDB L3 is disabled
+    describe file('/opt/opendaylight/etc/custom.properties') do
+      it { should be_file }
+      it { should be_owned_by 'odl' }
+      it { should be_grouped_into 'odl' }
+      its(:content) { should match /^ovsdb.l3.fwd.enabled=no/ }
+    end
   end
 end
 

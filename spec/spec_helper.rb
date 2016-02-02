@@ -195,16 +195,29 @@ def enable_l3_tests(options = {})
   # TODO: Remove this possible source of bugs^^
   enable_l3 = options.fetch(:enable_l3, 'no')
 
-  # Confirm ODL OVSDB L3 config
-  it {
-    should contain_file('custom.properties').with(
-      'ensure'      => 'file',
-      'path'        => '/opt/opendaylight/etc/custom.properties',
-      'owner'   => 'odl',
-      'group'   => 'odl',
-      'content'     => /ovsdb.l3.fwd.enabled=#{enable_l3}/
-    )
-  }
+  if [true, 'yes'].include? enable_l3
+    # Confirm ODL OVSDB L3 is enabled
+    it {
+      should contain_file('custom.properties').with(
+        'ensure'      => 'file',
+        'path'        => '/opt/opendaylight/etc/custom.properties',
+        'owner'   => 'odl',
+        'group'   => 'odl',
+        'content'     => /^ovsdb.l3.fwd.enabled=yes/
+      )
+    }
+  elsif [false, 'no'].include? enable_l3
+    # Confirm ODL OVSDB L3 is disabled
+    it {
+      should contain_file('custom.properties').with(
+        'ensure'      => 'file',
+        'path'        => '/opt/opendaylight/etc/custom.properties',
+        'owner'   => 'odl',
+        'group'   => 'odl',
+        'content'     => /^ovsdb.l3.fwd.enabled=no/
+      )
+    }
+  end
 end
 
 def tarball_install_tests(options = {})

@@ -179,7 +179,7 @@ To enable the ODL OVSDB L3, use the `enable_l3` flag. It's disabled by default.
 
 ```puppet
 class { 'opendaylight':
-  enable_l3 => 'yes',
+  enable_l3 => true,
 }
 ```
 
@@ -287,9 +287,7 @@ Enable or disable ODL OVSDB L3 forwarding.
 
 Default: `'no'`
 
-Valid options: The strings 'yes' or 'no'.
-
-Boolean values are not currently supported, but that feature may be added.
+Valid options: The strings `'yes'` or `'no'` or boolean values `true` and `false`.
 
 The ODL OVSDB L3 config in `/opt/opendaylight/etc/custom.properties` is set to
 the value of the `enable_l3` param.
@@ -298,7 +296,7 @@ A manifest like
 
 ```puppet
 class { 'opendaylight':
-  enable_l3 => 'yes',
+  enable_l3 => true,
 }
 ```
 

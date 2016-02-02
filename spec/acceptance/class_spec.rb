@@ -147,5 +147,21 @@ describe 'opendaylight class' do
       # Call specialized helper fn for ODL OVSDB L3 config validations
       enable_l3_validations(enable_l3: 'yes')
     end
+
+    context 'using false for enable_l3' do
+      # Call specialized helper fn to install OpenDaylight
+      install_odl(enable_l3: false)
+
+      # Call specialized helper fn for ODL OVSDB L3 config validations
+      enable_l3_validations(enable_l3: false)
+    end
+
+    context 'using true for enable_l3' do
+      # Call specialized helper fn to install OpenDaylight
+      install_odl(enable_l3: true)
+
+      # Call specialized helper fn for ODL OVSDB L3 config validations
+      enable_l3_validations(enable_l3: true)
+    end
   end
 end
