@@ -48,9 +48,8 @@ log4j.appender.sift.appender.layout=org.apache.log4j.PatternLayout
 log4j.appender.sift.appender.layout.ConversionPattern=%d{ISO8601} | %-5.5p | %-16.16t | %-32.32c{1} | %m%n
 log4j.appender.sift.appender.file=${karaf.data}/log/$\\{bundle.name\\}.log
 log4j.appender.sift.appender.append=true
-
-# Log level config added by puppet-opendaylight params
 <% scope.lookupvar('opendaylight::log_levels').each_pair do |logger, level| -%>
+
+# Log level config added by puppet-opendaylight
 log4j.logger.<%= logger %> = <%= level %>
 <% end -%>
-# End puppet-opendaylight config

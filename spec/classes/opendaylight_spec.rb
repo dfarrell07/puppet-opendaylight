@@ -31,6 +31,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized Karaf tests elsewhere
             # Note that this function is defined in spec_helper
             karaf_feature_tests
+
+            # Run test that specialize in checking custom log level config
+            # NB: Only testing defaults here, specialized log level tests elsewhere
+            # Note that this function is defined in spec_helper
+            log_level_tests
           end
         end
 
@@ -75,6 +80,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized Karaf tests elsewhere
             # Note that this function is defined in spec_helper
             karaf_feature_tests
+
+            # Run test that specialize in checking custom log level config
+            # NB: Only testing defaults here, specialized log level tests elsewhere
+            # Note that this function is defined in spec_helper
+            log_level_tests
           end
         end
 
@@ -135,6 +145,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized Karaf tests elsewhere
             # Note that this function is defined in spec_helper
             karaf_feature_tests
+
+            # Run test that specialize in checking custom log level config
+            # NB: Only testing defaults here, specialized log level tests elsewhere
+            # Note that this function is defined in spec_helper
+            log_level_tests
           end
         end
 
@@ -311,6 +326,78 @@ describe 'opendaylight' do
       # Run test that specialize in checking ODL REST port config
       # Note that this function is defined in spec_helper
       odl_rest_port_tests(odl_rest_port: 7777)
+    end
+  end
+
+  # All custom log level tests
+  describe 'custom log level tests' do
+    # Non-OS-type tests assume CentOS 7
+    #   See issue #43 for reasoning:
+    #   https://github.com/dfarrell07/puppet-opendaylight/issues/43#issue-57343159
+    osfamily = 'RedHat'
+    operatingsystem = 'CentOS'
+    operatingsystemmajrelease = '7'
+    context 'using default log levels' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{ }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking custom log level config
+      # Note that this function is defined in spec_helper
+      log_level_tests
+    end
+
+    context 'adding one custom log level' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      custom_log_levels = { 'org.opendaylight.ovsdb' => 'TRACE' }
+
+      let(:params) {{
+        :log_levels => custom_log_levels,
+      }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking ODL REST port config
+      # Note that this function is defined in spec_helper
+      log_level_tests(log_levels: custom_log_levels)
+    end
+
+    context 'adding two custom log levels' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      custom_log_levels = { 'org.opendaylight.ovsdb' => 'TRACE',
+                         'org.opendaylight.ovsdb.lib' => 'INFO' }
+
+      let(:params) {{
+        :log_levels => custom_log_levels,
+      }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking ODL REST port config
+      # Note that this function is defined in spec_helper
+      log_level_tests(log_levels: custom_log_levels)
     end
   end
 
