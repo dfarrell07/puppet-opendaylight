@@ -130,8 +130,29 @@ def generic_validations()
     it { should be_running }
   end
 
+  # Should contain Karaf features config file
+  describe file('/opt/opendaylight/etc/org.apache.karaf.features.cfg') do
+    it { should be_file }
+    it { should be_owned_by 'odl' }
+    it { should be_grouped_into 'odl' }
+  end
+
+  # Should contain ODL NB port config file
+  describe file('/opt/opendaylight/etc/jetty.xml') do
+    it { should be_file }
+    it { should be_owned_by 'odl' }
+    it { should be_grouped_into 'odl' }
+  end
+
   # Should contain log level config file
   describe file('/opt/opendaylight/etc/org.ops4j.pax.logging.cfg') do
+    it { should be_file }
+    it { should be_owned_by 'odl' }
+    it { should be_grouped_into 'odl' }
+  end
+
+  # Should contain ODL OVSDB L3 enable/disable config file
+  describe file('/opt/opendaylight/etc/custom.properties') do
     it { should be_file }
     it { should be_owned_by 'odl' }
     it { should be_grouped_into 'odl' }
