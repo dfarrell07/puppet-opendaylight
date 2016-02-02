@@ -14,6 +14,8 @@
   * [Karaf Features](#karaf-features)
   * [Install Method](#install-method)
   * [Ports](#ports)
+  * [Log Verbosity](#log-verbosity)
+  * [Enabling ODL OVSDB L3](#enabling-odl-ovsdb-l3)
 1. [Reference ](#reference)
 1. [Limitations](#limitations)
 1. [Development](#development)
@@ -171,6 +173,16 @@ class { 'opendaylight':
 }
 ```
 
+### Enabling ODL OVSDB L3
+
+To enable the ODL OVSDB L3, use the `enable_l3` flag. It's disabled by default.
+
+```puppet
+class { 'opendaylight':
+  enable_l3 => 'yes',
+}
+```
+
 ## Reference
 
 ### Classes
@@ -268,6 +280,33 @@ org.opendaylight.ovsdb.lib | INFO
 ```
 
 The main log output file is `/opt/opendaylight/data/log/karaf.log`.
+
+##### `enable_l3`
+
+Enable or disable ODL OVSDB L3 forwarding.
+
+Default: `'no'`
+
+Valid options: The strings 'yes' or 'no'.
+
+Boolean values are not currently supported, but that feature may be added.
+
+The ODL OVSDB L3 config in `/opt/opendaylight/etc/custom.properties` is set to
+the value of the `enable_l3` param.
+
+A manifest like
+
+```puppet
+class { 'opendaylight':
+  enable_l3 => 'yes',
+}
+```
+
+Would would result in
+
+```
+ovsdb.l3.fwd.enabled=yes
+```
 
 ##### `tarball_url`
 

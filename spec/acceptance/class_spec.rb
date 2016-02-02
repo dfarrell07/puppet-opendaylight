@@ -123,7 +123,6 @@ describe 'opendaylight class' do
     end
   end
 
-
   describe 'testing ODL OVSDB L3 config' do
     context 'using enable_l3 default' do
       # Call specialized helper fn to install OpenDaylight
