@@ -126,24 +126,7 @@ def generic_validations()
     it { should be_running }
   end
 
-  # Validations specific to the host OS
-  if ['fedora-20'].include? ENV['RS_SET']
-    # Validations for (legecy) Fedora 20 checks
-    # NB: Fedora 20 support will be removed soon, it's EOL
-
-    # Verify ODL systemd .service file
-    describe file('/usr/lib/systemd/system/opendaylight.service') do
-      it { should be_file }
-      it { should be_owned_by 'root' }
-      it { should be_grouped_into 'root' }
-      it { should be_mode '644' }
-    end
-
-    # Java 7 should be installed
-    describe package('java-1.7.0-openjdk') do
-      it { should be_installed }
-    end
-  elsif ['centos-7', 'centos-7-docker', 'fedora-21'].include? ENV['RS_SET']
+  if ['centos-7', 'centos-7-docker', 'fedora-22'].include? ENV['RS_SET']
     # Validations for modern Red Hat family OSs
 
     # Verify ODL systemd .service file
@@ -233,7 +216,7 @@ def tarball_validations()
   end
 
   # Repo checks break (not fail) when yum doesn't make sense (Ubuntu)
-  if ['centos-7', 'fedora-20', 'fedora-21'].include? ENV['RS_SET']
+  if ['centos-7', 'fedora-22'].include? ENV['RS_SET']
     describe yumrepo('opendaylight-4-testing') do
       it { should_not exist }
       it { should_not be_enabled }

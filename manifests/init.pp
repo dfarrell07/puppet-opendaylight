@@ -49,8 +49,9 @@ class opendaylight (
       }
     }
     fedora: {
-      # Fedora distros < 20 are EOL as of Jan 6th 2015
-      if $::operatingsystemmajrelease < '20' {
+      # Fedora distros < 22 are EOL as of 2015-12-01
+      # https://fedoraproject.org/wiki/End_of_life
+      if $::operatingsystemmajrelease < '22' {
         fail("Unsupported OS: ${::operatingsystem} ${::operatingsystemmajrelease}")
       }
     }

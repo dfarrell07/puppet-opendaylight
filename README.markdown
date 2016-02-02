@@ -55,8 +55,8 @@ Getting started with the OpenDaylight Puppet module is as simple as declaring
 the `::opendaylight` class.
 
 The [vagrant-opendaylight][11] project provides an easy way to experiment
-with [applying the ODL Puppet module][12] to CentOS 7, Fedora 20 and Fedora
-21 Vagrant boxes.
+with [applying the ODL Puppet module][12] to CentOS 7, Fedora 22 and Fedora
+23 Vagrant boxes.
 
 ```
 [~/vagrant-opendaylight]$ vagrant status
@@ -230,12 +230,10 @@ tarball) as a string.
 
 ## Limitations
 
-* Tested on Fedora 20, 21, CentOS 7 and Ubuntu 14.04.
+* Tested on Fedora 22, 23, CentOS 7 and Ubuntu 14.04.
 * CentOS 7 is currently the most stable OS option.
 * The RPM install method is likely more reliable than the tarball install
 method.
-* Our [Fedora 21 Beaker tests are failing][13], but it seems to be an issue
-with the Vagrant image, not the Puppet mod.
 
 ## Development
 
