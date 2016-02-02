@@ -56,6 +56,7 @@ def install_odl(options = {})
   default_features = options.fetch(:default_features,
     ['config', 'standard', 'region', 'package', 'kar', 'ssh', 'management'])
   odl_rest_port = options.fetch(:odl_rest_port, 8080)
+  log_levels = options.fetch(:log_levels, {})
 
   # Build script for consumption by Puppet apply
   it 'should work idempotently with no errors' do
@@ -65,6 +66,7 @@ def install_odl(options = {})
       default_features => #{default_features},
       extra_features => #{extra_features},
       odl_rest_port=> #{odl_rest_port},
+      log_levels=> #{log_levels},
     }
     EOS
 
@@ -124,6 +126,13 @@ def generic_validations()
   # OpenDaylight will appear as a Java process
   describe process('java') do
     it { should be_running }
+  end
+
+  # Should contain log level config file
+  describe file('/opt/opendaylight/etc/org.ops4j.pax.logging.cfg') do
+    it { should be_file }
+    it { should be_owned_by 'odl' }
+    it { should be_grouped_into 'odl' }
   end
 
   if ['centos-7', 'centos-7-docker', 'fedora-22'].include? ENV['RS_SET']
@@ -196,6 +205,52 @@ def port_config_validations(options = {})
   end
 end
 
+# Shared function for validations related to custom logging verbosity
+def log_level_validations(options = {})
+  # NB: This param default should match the one used by the opendaylight
+  #   class, which is defined in opendaylight::params
+  # TODO: Remove this possible source of bugs^^
+  log_levels = options.fetch(:log_levels, {})
+
+  if log_levels.empty?
+    # Should contain log level config file
+    describe file('/opt/opendaylight/etc/org.ops4j.pax.logging.cfg') do
+      it { should be_file }
+      it { should be_owned_by 'odl' }
+      it { should be_grouped_into 'odl' }
+    end
+    # Should not contain custom log level config
+    describe file('/opt/opendaylight/etc/org.ops4j.pax.logging.cfg') do
+      it { should be_file }
+      it { should be_owned_by 'odl' }
+      it { should be_grouped_into 'odl' }
+      its(:content) { should_not match /# Log level config added by puppet-opendaylight/ }
+    end
+  else
+    # Should contain log level config file
+    describe file('/opt/opendaylight/etc/org.ops4j.pax.logging.cfg') do
+      it { should be_file }
+      it { should be_owned_by 'odl' }
+      it { should be_grouped_into 'odl' }
+    end
+    # Should not contain custom log level config
+    describe file('/opt/opendaylight/etc/org.ops4j.pax.logging.cfg') do
+      it { should be_file }
+      it { should be_owned_by 'odl' }
+      it { should be_grouped_into 'odl' }
+      its(:content) { should match /# Log level config added by puppet-opendaylight/ }
+    end
+    # Verify each custom log level config entry
+    log_levels.each_pair do |logger, level|
+      describe file('/opt/opendaylight/etc/org.ops4j.pax.logging.cfg') do
+        it { should be_file }
+        it { should be_owned_by 'odl' }
+        it { should be_grouped_into 'odl' }
+        its(:content) { should match /log4j.logger.#{logger} = #{level}/ }
+      end
+    end
+  end
+end
 
 # Shared function that handles validations specific to RPM-type installs
 def rpm_validations()

@@ -91,4 +91,35 @@ describe 'opendaylight class' do
       port_config_validations(odl_rest_port: 7777)
     end
   end
+
+  describe 'testing custom logging verbosity' do
+    context 'using default log levels' do
+      # Call specialized helper fn to install OpenDaylight
+      install_odl
+
+      # Call specialized helper fn for custom logger verbosity validations
+      log_level_validations
+    end
+
+    context 'adding one custom log level' do
+      custom_log_levels = { 'org.opendaylight.ovsdb' => 'TRACE' }
+
+      # Call specialized helper fn to install OpenDaylight
+      install_odl(log_levels: custom_log_levels)
+
+      # Call specialized helper fn for custom logger verbosity validations
+      log_level_validations(log_levels: custom_log_levels)
+    end
+
+    context 'adding two custom log level' do
+      custom_log_levels = { 'org.opendaylight.ovsdb' => 'TRACE',
+                            'org.opendaylight.ovsdb.lib' => 'INFO' }
+
+      # Call specialized helper fn to install OpenDaylight
+      install_odl(log_levels: custom_log_levels)
+
+      # Call specialized helper fn for custom logger verbosity validations
+      log_level_validations(log_levels: custom_log_levels)
+    end
+  end
 end
