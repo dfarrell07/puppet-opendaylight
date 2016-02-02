@@ -22,20 +22,25 @@ describe 'opendaylight' do
             # Note that this function is defined in spec_helper
             generic_tests
 
-            # Run test that specialize in checking rpm-based installs
+            # Run tests that specialize in checking rpm-based installs
             # NB: Only testing defaults here, specialized rpm tests elsewhere
             # Note that this function is defined in spec_helper
             rpm_install_tests(operatingsystem: operatingsystem)
 
-            # Run test that specialize in checking Karaf feature installs
+            # Run tests that specialize in checking Karaf feature installs
             # NB: Only testing defaults here, specialized Karaf tests elsewhere
             # Note that this function is defined in spec_helper
             karaf_feature_tests
 
-            # Run test that specialize in checking custom log level config
+            # Run tests that specialize in checking custom log level config
             # NB: Only testing defaults here, specialized log level tests elsewhere
             # Note that this function is defined in spec_helper
             log_level_tests
+
+            # Run tests that specialize in checking ODL OVSDB L3 config
+            # NB: Only testing defaults here, specialized enabling L3 tests elsewhere
+            # Note that this function is defined in spec_helper
+            enable_l3_tests
           end
         end
 
@@ -85,6 +90,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized log level tests elsewhere
             # Note that this function is defined in spec_helper
             log_level_tests
+
+            # Run tests that specialize in checking ODL OVSDB L3 config
+            # NB: Only testing defaults here, specialized enabling L3 tests elsewhere
+            # Note that this function is defined in spec_helper
+            enable_l3_tests
           end
         end
 
@@ -150,6 +160,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized log level tests elsewhere
             # Note that this function is defined in spec_helper
             log_level_tests
+
+            # Run tests that specialize in checking ODL OVSDB L3 config
+            # NB: Only testing defaults here, specialized enabling L3 tests elsewhere
+            # Note that this function is defined in spec_helper
+            enable_l3_tests
           end
         end
 
@@ -372,7 +387,7 @@ describe 'opendaylight' do
       # Note that this function is defined in spec_helper
       generic_tests
 
-      # Run test that specialize in checking ODL REST port config
+      # Run test that specialize in checking log level config
       # Note that this function is defined in spec_helper
       log_level_tests(log_levels: custom_log_levels)
     end
@@ -395,9 +410,76 @@ describe 'opendaylight' do
       # Note that this function is defined in spec_helper
       generic_tests
 
-      # Run test that specialize in checking ODL REST port config
+      # Run test that specialize in checking log level config
       # Note that this function is defined in spec_helper
       log_level_tests(log_levels: custom_log_levels)
+    end
+  end
+
+  # All OVSDB L3 enable/disable tests
+  describe 'OVSDB L3 enable/disable tests' do
+    # Non-OS-type tests assume CentOS 7
+    #   See issue #43 for reasoning:
+    #   https://github.com/dfarrell07/puppet-opendaylight/issues/43#issue-57343159
+    osfamily = 'RedHat'
+    operatingsystem = 'CentOS'
+    operatingsystemmajrelease = '7'
+    context 'using enable_l3 default' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{ }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking ODL OVSDB L3 config
+      # Note that this function is defined in spec_helper
+      enable_l3_tests
+    end
+
+    context 'using "no" for enable_l3' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{
+        :enable_l3 => 'no',
+      }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking ODL OVSDB L3 config
+      # Note that this function is defined in spec_helper
+      enable_l3_tests(enable_l3: 'no')
+    end
+
+    context 'using "yes" for enable_l3' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{
+        :enable_l3 => 'yes',
+      }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking ODL OVSDB L3 config
+      # Note that this function is defined in spec_helper
+      enable_l3_tests(enable_l3: 'yes')
     end
   end
 
