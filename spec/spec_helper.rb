@@ -181,7 +181,7 @@ def log_level_tests(options = {})
           'path'        => '/opt/opendaylight/etc/org.ops4j.pax.logging.cfg',
           'owner'   => 'odl',
           'group'   => 'odl',
-          'content'     => /log4j.logger.#{logger} = #{level}/
+          'content'     => /^log4j.logger.#{logger} = #{level}/
         )
       }
     end

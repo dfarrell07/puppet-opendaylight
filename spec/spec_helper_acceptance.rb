@@ -269,7 +269,7 @@ def log_level_validations(options = {})
         it { should be_file }
         it { should be_owned_by 'odl' }
         it { should be_grouped_into 'odl' }
-        its(:content) { should match /log4j.logger.#{logger} = #{level}/ }
+        its(:content) { should match /^log4j.logger.#{logger} = #{level}/ }
       end
     end
   end
