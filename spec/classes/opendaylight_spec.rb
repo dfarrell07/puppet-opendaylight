@@ -32,6 +32,11 @@ describe 'opendaylight' do
             # Note that this function is defined in spec_helper
             karaf_feature_tests
 
+            # Run tests that specialize in checking ODL's REST port config
+            # NB: Only testing defaults here, specialized log level tests elsewhere
+            # Note that this function is defined in spec_helper
+            odl_rest_port_tests
+
             # Run tests that specialize in checking custom log level config
             # NB: Only testing defaults here, specialized log level tests elsewhere
             # Note that this function is defined in spec_helper
@@ -85,6 +90,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized Karaf tests elsewhere
             # Note that this function is defined in spec_helper
             karaf_feature_tests
+
+            # Run tests that specialize in checking ODL's REST port config
+            # NB: Only testing defaults here, specialized log level tests elsewhere
+            # Note that this function is defined in spec_helper
+            odl_rest_port_tests
 
             # Run test that specialize in checking custom log level config
             # NB: Only testing defaults here, specialized log level tests elsewhere
@@ -155,6 +165,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized Karaf tests elsewhere
             # Note that this function is defined in spec_helper
             karaf_feature_tests
+
+            # Run tests that specialize in checking ODL's REST port config
+            # NB: Only testing defaults here, specialized log level tests elsewhere
+            # Note that this function is defined in spec_helper
+            odl_rest_port_tests
 
             # Run test that specialize in checking custom log level config
             # NB: Only testing defaults here, specialized log level tests elsewhere
