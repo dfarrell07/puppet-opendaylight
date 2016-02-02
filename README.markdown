@@ -62,14 +62,27 @@ with [applying the ODL Puppet module][12] to CentOS 7, Fedora 22 and Fedora
 [~/vagrant-opendaylight]$ vagrant status
 Current machine states:
 
-cent7                     not created (virtualbox)
-cent7_pup_rpm             not created (virtualbox)
-cent7_ansible             not created (virtualbox)
-cent7_pup_tb              not created (virtualbox)
-cent7_rpm                 not created (virtualbox)
-f21_pup_rpm               not created (virtualbox)
-f21_pup_tb                not created (virtualbox)
-f21_rpm                   not created (virtualbox)
+cent7                     not created (libvirt)
+cent7_rpm_he_sr4          not created (libvirt)
+cent7_rpm_li_sr2          not created (libvirt)
+cent7_rpm_be              not created (libvirt)
+cent7_ansible             not created (libvirt)
+cent7_ansible_be          not created (libvirt)
+cent7_ansible_path        not created (libvirt)
+cent7_pup_rpm             not created (libvirt)
+cent7_pup_custom_logs     not created (libvirt)
+cent7_pup_tb              not created (libvirt)
+f22_rpm_li                not created (libvirt)
+f22_ansible               not created (libvirt)
+f22_pup_rpm               not created (libvirt)
+f23_rpm_li                not created (libvirt)
+f23_rpm_li_sr1            not created (libvirt)
+f23_rpm_li_sr2            not created (libvirt)
+f23_rpm_li_sr3            not created (libvirt)
+f23_rpm_be                not created (libvirt)
+f23_ansible               not created (libvirt)
+f23_pup_rpm               not created (libvirt)
+
 [~/vagrant-opendaylight]$ vagrant up cent7_pup_rpm
 # A CentOS 7 VM is created and configured using the ODL Puppet mod's defaults
 [~/vagrant-opendaylight]$ vagrant ssh cent7_pup_rpm
