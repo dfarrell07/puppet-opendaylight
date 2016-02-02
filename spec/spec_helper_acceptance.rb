@@ -57,6 +57,7 @@ def install_odl(options = {})
     ['config', 'standard', 'region', 'package', 'kar', 'ssh', 'management'])
   odl_rest_port = options.fetch(:odl_rest_port, 8080)
   log_levels = options.fetch(:log_levels, {})
+  enable_l3 = options.fetch(:enable_l3, 'no')
 
   # Build script for consumption by Puppet apply
   it 'should work idempotently with no errors' do
@@ -66,6 +67,7 @@ def install_odl(options = {})
       default_features => #{default_features},
       extra_features => #{extra_features},
       odl_rest_port=> #{odl_rest_port},
+      enable_l3=> #{enable_l3},
       log_levels=> #{log_levels},
     }
     EOS
@@ -249,6 +251,21 @@ def log_level_validations(options = {})
         its(:content) { should match /log4j.logger.#{logger} = #{level}/ }
       end
     end
+  end
+end
+
+# Shared function for validations related to ODL OVSDB L3 config
+def enable_l3_validations(options = {})
+  # NB: This param default should match the one used by the opendaylight
+  #   class, which is defined in opendaylight::params
+  # TODO: Remove this possible source of bugs^^
+  enable_l3 = options.fetch(:enable_l3, 'no')
+
+  describe file('/opt/opendaylight/etc/custom.properties') do
+    it { should be_file }
+    it { should be_owned_by 'odl' }
+    it { should be_grouped_into 'odl' }
+    its(:content) { should match /ovsdb.l3.fwd.enabled=#{enable_l3}/ }
   end
 end
 

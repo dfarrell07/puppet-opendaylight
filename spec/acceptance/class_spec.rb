@@ -122,4 +122,31 @@ describe 'opendaylight class' do
       log_level_validations(log_levels: custom_log_levels)
     end
   end
+
+
+  describe 'testing ODL OVSDB L3 config' do
+    context 'using enable_l3 default' do
+      # Call specialized helper fn to install OpenDaylight
+      install_odl
+
+      # Call specialized helper fn for ODL OVSDB L3 config validations
+      enable_l3_validations
+    end
+
+    context 'using "no" for enable_l3' do
+      # Call specialized helper fn to install OpenDaylight
+      install_odl(enable_l3: 'no')
+
+      # Call specialized helper fn for ODL OVSDB L3 config validations
+      enable_l3_validations(enable_l3: 'no')
+    end
+
+    context 'using "yes" for enable_l3' do
+      # Call specialized helper fn to install OpenDaylight
+      install_odl(enable_l3: 'yes')
+
+      # Call specialized helper fn for ODL OVSDB L3 config validations
+      enable_l3_validations(enable_l3: 'yes')
+    end
+  end
 end
