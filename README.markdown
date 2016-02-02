@@ -160,6 +160,17 @@ class { 'opendaylight':
 }
 ```
 
+### Log Verbosity
+
+It's possible to define custom logger verbosity levels via the `log_levels`
+param.
+
+```puppet
+class { 'opendaylight':
+  log_levels => { 'org.opendaylight.ovsdb' => 'TRACE', 'org.opendaylight.ovsdb.lib' => 'INFO' },
+}
+```
+
 ## Reference
 
 ### Classes
@@ -219,6 +230,44 @@ Specifies the port for the ODL northbound REST interface to listen on.
 Default: `'8080'`
 
 Valid options: A valid port number as a string or integer.
+
+##### `log_levels`
+
+Custom OpenDaylight logger verbosity configuration.
+
+Default: `{}`
+
+Valid options: A hash of loggers to log levels.
+
+```
+{ 'org.opendaylight.ovsdb' => 'TRACE', 'org.opendaylight.ovsdb.lib' => 'INFO' }
+```
+
+Valid log levels are TRACE, DEBUG, INFO, WARN, and ERROR.
+
+The above example would add the following logging configuration to
+`/opt/opendaylight/etc/org.ops4j.pax.logging.cfg`.
+
+```
+# Log level config added by puppet-opendaylight
+log4j.logger.org.opendaylight.ovsdb = TRACE
+
+# Log level config added by puppet-opendaylight
+log4j.logger.org.opendaylight.ovsdb.lib = INFO
+```
+
+To view loggers and their verbosity levels, use `log:list` at the ODL Karaf shell.
+
+```
+opendaylight-user@root>log:list
+Logger                     | Level
+----------------------------------
+ROOT                       | INFO
+org.opendaylight.ovsdb     | TRACE
+org.opendaylight.ovsdb.lib | INFO
+```
+
+The main log output file is `/opt/opendaylight/data/log/karaf.log`.
 
 ##### `tarball_url`
 
