@@ -91,6 +91,7 @@ def karaf_feature_tests(options = {})
 
   # The order of this list concat matters
   features = default_features + extra_features
+  features_csv = features.join(',')
 
   # Confirm properties of Karaf features config file
   # NB: These hashes don't work with Ruby 1.8.7, but we
@@ -101,7 +102,13 @@ def karaf_feature_tests(options = {})
       'path'        => '/opt/opendaylight/etc/org.apache.karaf.features.cfg',
       'owner'   => 'odl',
       'group'   => 'odl',
-      'content'     => /^featuresBoot=#{features.join(",")}/
+    )
+  }
+  it {
+    should contain_file_line('featuresBoot').with(
+      'path'  => '/opt/opendaylight/etc/org.apache.karaf.features.cfg',
+      'line'  => "featuresBoot=#{features_csv}",
+      'match' => '^featuresBoot=.*$',
     )
   }
 end

@@ -6,13 +6,17 @@
 class opendaylight::config {
   # Configuration of Karaf features to install
   file { 'org.apache.karaf.features.cfg':
-    ensure  => file,
-    path    => '/opt/opendaylight/etc/org.apache.karaf.features.cfg',
+    ensure => file,
+    path   => '/opt/opendaylight/etc/org.apache.karaf.features.cfg',
     # Set user:group owners
-    owner   => 'odl',
-    group   => 'odl',
-    # Use a template to populate the content
-    content => template('opendaylight/org.apache.karaf.features.cfg.erb'),
+    owner  => 'odl',
+    group  => 'odl',
+  }
+  $features_csv = join($opendaylight::features, ',')
+  file_line { 'featuresBoot':
+    path  => '/opt/opendaylight/etc/org.apache.karaf.features.cfg',
+    line  => "featuresBoot=${features_csv}",
+    match => '^featuresBoot=.*$',
   }
 
   # Configuration of ODL NB REST port to listen on
