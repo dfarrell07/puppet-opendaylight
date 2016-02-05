@@ -12,7 +12,7 @@ class opendaylight::params {
   $extra_features = []
   $odl_rest_port = '8080'
   $install_method = 'rpm'
-  $tarball_url = 'https://nexus.opendaylight.org/content/repositories/staging/org/opendaylight/integration/distribution-karaf/0.4.0-beryllium-daily-v201602020032/distribution-karaf-0.4.0-beryllium-daily-v201602020032.tar.gz'
+  $tarball_url = 'https://nexus.opendaylight.org/content/repositories/staging/org/opendaylight/integration/distribution-karaf/0.4.0-Beryllium-RC2/distribution-karaf-0.4.0-Beryllium-RC2.tar.gz'
   $unitfile_url = 'https://github.com/dfarrell07/opendaylight-systemd/archive/master/opendaylight-unitfile.tar.gz'
   $enable_l3 = 'no'
   $log_levels = {}
