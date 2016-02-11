@@ -92,5 +92,4 @@ desc "All tests, including Beaker tests against all nodes."
 task :acceptance => [
   :test,
   :centos_7_docker,
-  :ubuntu_1404_docker,
 ]
