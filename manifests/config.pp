@@ -58,11 +58,11 @@ class opendaylight::config {
     if $ha_node_count >= 2 {
       # Configuration Jolokia XML for HA
       file { 'opendaylight/jolokia.xml':
-        ensure  => file,
-        path    => '/opt/opendaylight/deploy/jolokia.xml',
+        ensure => file,
+        path   => '/opt/opendaylight/deploy/jolokia.xml',
         # Set user:group owners
-        owner   => 'odl',
-        group   => 'odl',
+        owner  => 'odl',
+        group  => 'odl',
       }
 
       # Configure ODL OSVDB Clustering
