@@ -85,7 +85,7 @@ ovsdb.listenPort=6640
 # disabled by default.
 <% if [true, 'yes'].include? scope.lookupvar('opendaylight::enable_l3') -%>
 ovsdb.l3.fwd.enabled=yes
-ovsdb.l3.arp.responder.disable=no
+ovsdb.l3.arp.responder.disabled=no
 <% elsif [false, 'no'].include? scope.lookupvar('opendaylight::enable_l3') -%>
 ovsdb.l3.fwd.enabled=no
 <% else -%>
