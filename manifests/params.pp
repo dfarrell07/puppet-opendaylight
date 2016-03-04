@@ -16,4 +16,7 @@ class opendaylight::params {
   $unitfile_url = 'https://github.com/dfarrell07/opendaylight-systemd/archive/master/opendaylight-unitfile.tar.gz'
   $enable_l3 = 'no'
   $log_levels = {}
+  $enable_ha = false
+  $ha_node_ips = []
+  $ha_node_index = ''
 }

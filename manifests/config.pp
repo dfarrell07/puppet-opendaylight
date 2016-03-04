@@ -51,4 +51,28 @@ class opendaylight::config {
     # Use a template to populate the content
     content => template('opendaylight/org.ops4j.pax.logging.cfg.erb'),
   }
+
+  # Configure ODL HA if enabled
+  $ha_node_count = count($::opendaylight::ha_node_ips)
+  if $::opendaylight::enable_ha {
+    if $ha_node_count >= 2 {
+      # Configuration Jolokia XML for HA
+      file { 'opendaylight/jolokia.xml':
+        ensure => file,
+        path   => '/opt/opendaylight/deploy/jolokia.xml',
+        # Set user:group owners
+        owner  => 'odl',
+        group  => 'odl',
+      }
+
+      # Configure ODL OSVDB Clustering
+      $ha_node_ip_str = join($::opendaylight::ha_node_ips, ' ')
+      exec { 'Configure ODL OVSDB Clustering':
+        command => "configure_cluster.sh ${::opendaylight::ha_node_index} ${ha_node_ip_str}",
+        path    => '/opt/opendaylight/bin/',
+      }
+    } else {
+      fail("Number of HA nodes less than 2: ${ha_node_count} and HA Enabled")
+    }
+  }
 }

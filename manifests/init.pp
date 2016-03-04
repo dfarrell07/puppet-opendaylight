@@ -19,6 +19,12 @@
 #   Enable or disable ODL OVSDB ML2 L3 forwarding. Valid: true, false, 'yes' and 'no'.
 # [*log_levels*]
 #   Custom OpenDaylight logger verbosity configuration (TRACE, DEBUG, INFO, WARN, ERROR).
+# [*enable_ha*]
+#   Enable or disable ODL OVSDB HA Clustering. Valid: true or false. Default: false.
+# [*ha_node_ips*]
+#   Array of IPs for each node in the HA cluster.
+# [*ha_node_index*]
+#   Index of ha_node_ips for this node.
 #
 class opendaylight (
   $default_features = $::opendaylight::params::default_features,
@@ -29,6 +35,9 @@ class opendaylight (
   $unitfile_url = $::opendaylight::params::unitfile_url,
   $enable_l3 = $::opendaylight::params::enable_l3,
   $log_levels = $::opendaylight::params::log_levels,
+  $enable_ha = $::opendaylight::params::enable_ha,
+  $ha_node_ips = $::opendaylight::params::ha_node_ips,
+  $ha_node_index = $::opendaylight::params::ha_node_index,
 ) inherits ::opendaylight::params {
 
   # Validate OS family
