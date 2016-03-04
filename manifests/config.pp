@@ -63,6 +63,7 @@ class opendaylight::config {
         # Set user:group owners
         owner  => 'odl',
         group  => 'odl',
+        source => 'puppet:///modules/opendaylight/jolokia.xml',
       }
 
       # Configure ODL OSVDB Clustering
