@@ -35,6 +35,19 @@ class opendaylight::install {
       ensure  => present,
       require => Yumrepo['opendaylight-40-release'],
     }
+    ->
+    # Configure the systemd file to force ipv4 binds (instead of ipv6)
+    file_line { 'odl_start_ipv4 ':
+      ensure  => present,
+      path    => '/usr/lib/systemd/system/opendaylight.service',
+      line    => 'Environment=_JAVA_OPTIONS=\'-Djava.net.preferIPv4Stack=true\'',
+      after   => 'ExecStart=/opt/opendaylight/bin/start',
+    }
+    ->
+    exec {'reload_systemd_units':
+      command => 'systemctl daemon-reload',
+      path    => '/bin'
+    }
   }
   elsif $opendaylight::install_method == 'tarball' {
     # Install Java 7
