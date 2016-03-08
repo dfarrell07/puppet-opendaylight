@@ -16,6 +16,7 @@
   * [Ports](#ports)
   * [Log Verbosity](#log-verbosity)
   * [Enabling ODL OVSDB L3](#enabling-odl-ovsdb-l3)
+  * [Enabling ODL OVSDB HA](#enabling-odl-ovsdb-ha)
 1. [Reference ](#reference)
 1. [Limitations](#limitations)
 1. [Development](#development)
@@ -183,6 +184,24 @@ class { 'opendaylight':
 }
 ```
 
+### Enable ODL OVSDB HA
+
+To enable ODL OVSDB HA, use the `enable_ha` flag. It's disabled by default.
+
+When `enable_ha` is set to true the `ha_node_ips` should be populated with the
+IP addresses that ODL will listen on for each node in the OVSDB HA cluster and
+`ha_node_index` should be set with the index of the IP address from
+`ha_node_ips` for the particular node that puppet is configuring as part of the
+HA cluster.
+
+```puppet
+class { 'opendaylight':
+  enable_ha     => true,
+  ha_node_ips   => ['10.10.10.1', '10.10.10.1', '10.10.10.3'],
+  ha_node_index => 0,
+}
+```
+
 ## Reference
 
 ### Classes
@@ -304,7 +323,41 @@ Would would result in
 
 ```
 ovsdb.l3.fwd.enabled=yes
+ovsdb.l3.arp.responder.disabled=no
 ```
+
+##### `enable_ha`
+
+Enable or disable ODL OVSDB High Availablity.
+
+Default: `false`
+
+Valid options: The boolean values `true` and `false`.
+
+Requires: `ha_node_ips`, `ha_node_index`
+
+The ODL OVSDB Clustering and Jolokia XML for HA are configured and enabled.
+
+##### `ha_node_ips`
+
+Specifies the IPs that are part of the HA cluster enabled by `enable_ha`.
+
+Default: []
+
+Valid options: An array of IP addresses `['10.10.10.1', '10.10.10.1', '10.10.10.3']`.
+
+Required by: `enable_ha`
+
+##### `ha_node_index`
+
+Specifies the index of the IP for the node being configured from the array `ha_node_ips`.
+
+Default: ''
+
+Valid options: Index of a member of the array `ha_node_ips`: `0`.
+
+Required by: `enable_ha`, `ha_node_ips`
+
 
 ##### `tarball_url`
 
