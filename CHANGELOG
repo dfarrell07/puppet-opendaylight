@@ -18,3 +18,11 @@
 - Update ODL to Beryllium ERP RC3.1
 2016-02-16 Release 3.2.9
 - Update ODL to Beryllium
+2016-02-16 Release 3.2.9
+- Update ODL to Beryllium
+2016-03-03 Release 3.3.0
+- Add ODL HA config, fix ARP-yes when L3
+2016-03-04 Release 3.3.1
+- Bugfix in ODL cluster path config
+2016-03-04 Release 3.3.2
+- Bugfix in ODL HA jolokia.xml file content
