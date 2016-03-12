@@ -26,3 +26,5 @@
 - Bugfix in ODL cluster path config
 2016-03-04 Release 3.3.2
 - Bugfix in ODL HA jolokia.xml file content
+2016-03-11 Release 3.4.0
+- Add param to config ODL's bind IP addr
