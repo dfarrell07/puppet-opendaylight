@@ -417,4 +417,4 @@ See our [git commit history][17] for contributor information.
 [15]: https://github.com/dfarrell07/puppet-opendaylight/blob/master/CHANGELOG
 [16]: https://github.com/dfarrell07/puppet-opendaylight/releases
 [17]: https://github.com/dfarrell07/puppet-opendaylight/commits/master
-[18]: http://cbs.centos.org/repos/nfv7-opendaylight-40-release/x86_64/os/Packages/
+[18]: http://cbs.centos.org/repos/nfv7-opendaylight-41-release/x86_64/os/Packages/
