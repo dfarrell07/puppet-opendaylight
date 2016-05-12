@@ -95,6 +95,7 @@ class opendaylight::install {
       # This discards top-level dir of extracted tarball
       # Required to get proper /opt/opendaylight/ path
       strip_components => 1,
+      root_dir         => '.',
       # Default timeout is 120s, which may not be enough. See Issue #53:
       # https://github.com/dfarrell07/puppet-opendaylight/issues/53
       timeout          => 600,
