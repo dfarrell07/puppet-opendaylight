@@ -71,6 +71,7 @@ class opendaylight::config {
       exec { 'Configure ODL OVSDB Clustering':
         command => "configure_cluster.sh ${::opendaylight::ha_node_index} ${ha_node_ip_str}",
         path    => '/opt/opendaylight/bin/:/usr/sbin:/usr/bin:/sbin:/bin',
+        creates => '/opt/opendaylight/configuration/initial/akka.conf'
       }
     } else {
       fail("Number of HA nodes less than 2: ${ha_node_count} and HA Enabled")
