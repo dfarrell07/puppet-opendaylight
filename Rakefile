@@ -70,6 +70,11 @@ task :fedora_22 do
   sh "RS_SET=fedora-22 INSTALL_METHOD=rpm bundle exec rake beaker"
 end
 
+desc "Run Beaker tests against Fedora 23 node."
+task :fedora_23 do
+  sh "RS_SET=fedora-23 INSTALL_METHOD=rpm bundle exec rake beaker"
+end
+
 desc "Run Beaker tests against Fedora 23 Docker node."
 task :fedora_23_docker do
   sh "RS_SET=fedora-23-docker INSTALL_METHOD=rpm bundle exec rake beaker"
