@@ -13,6 +13,7 @@
 1. [Usage](#usage)
   * [Karaf Features](#karaf-features)
   * [Install Method](#install-method)
+  * [RPM Repo](#rpm-repo)
   * [Ports](#ports)
   * [Log Verbosity](#log-verbosity)
   * [Enabling ODL OVSDB L3](#enabling-odl-ovsdb-l3)
@@ -150,6 +151,34 @@ class { 'opendaylight':
   unitfile_url   => '<URL to your custom unitfile>',
 }
 ```
+
+### RPM Repo
+
+The `rpm_repo` param can be used to configure which RPM repository
+OpenDaylight is installed from.
+
+```puppet
+class { 'opendaylight':
+  rpm_repo => 'opendaylight-40-release',
+}
+```
+
+The naming convention follows the naming convention of the CentOS Community
+Build System, which is where upstream ODL hosts its RPMs. The
+`opendaylight-40-release` example above would install OpenDaylight Beryllium
+4.0.0 from the [nfv7-opendaylight-40-release][19] repo. Repo names ending in
+`-release` will always contain well-tested, officially released versions of
+OpenDaylight. Repos ending in `-testing` contain frequent, but unstable and
+unofficial, releases. The ODL version given in repo names shows which major
+and minor version it is pinned to. The `opendaylight-40-release` repo will
+always provide OpenDaylight Beryllium 4.0, whereas `opendaylight-4-release`
+will provide the latest release with major version 4 (which could include
+Service Releases, like SR2 4.2).
+
+For a full list of OpenDaylight releases and their CBS repos, see the
+[OpenDaylight Deployment wiki][20].
+
+This is only read when `install_method` is `rpm`.
 
 ### Ports
 
@@ -418,3 +447,5 @@ See our [git commit history][17] for contributor information.
 [16]: https://github.com/dfarrell07/puppet-opendaylight/releases
 [17]: https://github.com/dfarrell07/puppet-opendaylight/commits/master
 [18]: http://cbs.centos.org/repos/nfv7-opendaylight-42-release/x86_64/os/Packages/
+[19]: http://cbs.centos.org/repos/nfv7-opendaylight-40-release/x86_64/os/Packages/ OpenDaylight Beryllium CentOS CBS repo
+[20]: https://wiki.opendaylight.org/view/Deployment#RPM OpenDaylight RPMs and their repos

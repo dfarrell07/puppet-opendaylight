@@ -32,3 +32,5 @@
 - Update ODL to Beryllium SR2
 2016-06-01 Release 3.6.1
 - Minor bump due to Puppetforge issue
+2016-06-02 Release 3.7.0
+- Add param to configure ODL RPM repo

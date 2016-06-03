@@ -13,6 +13,8 @@
 #   IP for ODL northbound REST interface to bind to.
 # [*install_method *]
 #   How to install OpenDaylight. Current options are "rpm" and "tarball", default is RPM.
+# [*rpm_repo*]
+#   OpenDaylight CentOS CBS repo to install RPM from (opendaylight-4-testing, opendaylight-40-release, ...).
 # [*tarball_url*]
 #   If installing from a tarball, use this one. Defaults to latest ODL.
 # [*unitfile_url*]
@@ -34,6 +36,7 @@ class opendaylight (
   $odl_rest_port = $::opendaylight::params::odl_rest_port,
   $odl_bind_ip = $::opendaylight::params::odl_bind_ip,
   $install_method = $::opendaylight::params::install_method,
+  $rpm_repo = $::opendaylight::params::rpm_repo,
   $tarball_url = $::opendaylight::params::tarball_url,
   $unitfile_url = $::opendaylight::params::unitfile_url,
   $enable_l3 = $::opendaylight::params::enable_l3,

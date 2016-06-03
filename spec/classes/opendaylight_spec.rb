@@ -549,24 +549,48 @@ describe 'opendaylight' do
     operatingsystemmajrelease = '7'
 
     # All tests for RPM install method
-    context 'RPM' do
-      let(:facts) {{
-        :osfamily => osfamily,
-        :operatingsystem => operatingsystem,
-        :operatingsystemmajrelease => operatingsystemmajrelease,
-      }}
+    describe 'RPM' do
+      context 'installing default RPM' do
+        let(:facts) {{
+          :osfamily => osfamily,
+          :operatingsystem => operatingsystem,
+          :operatingsystemmajrelease => operatingsystemmajrelease,
+        }}
 
-      let(:params) {{
-        :install_method => 'rpm',
-      }}
+        let(:params) {{
+          :install_method => 'rpm',
+        }}
 
-      # Run shared tests applicable to all supported OSs
-      # Note that this function is defined in spec_helper
-      generic_tests
+        # Run shared tests applicable to all supported OSs
+        # Note that this function is defined in spec_helper
+        generic_tests
 
-      # Run test that specialize in checking RPM-based installs
-      # Note that this function is defined in spec_helper
-      rpm_install_tests
+        # Run test that specialize in checking RPM-based installs
+        # Note that this function is defined in spec_helper
+        rpm_install_tests
+      end
+
+      context 'installing Beryllium RPM' do
+        rpm_repo = 'opendaylight-40-release'
+        let(:facts) {{
+          :osfamily => osfamily,
+          :operatingsystem => operatingsystem,
+          :operatingsystemmajrelease => operatingsystemmajrelease,
+        }}
+
+        let(:params) {{
+          :install_method => 'rpm',
+          :rpm_repo => rpm_repo,
+        }}
+
+        # Run shared tests applicable to all supported OSs
+        # Note that this function is defined in spec_helper
+        generic_tests
+
+        # Run test that specialize in checking RPM-based installs
+        # Note that this function is defined in spec_helper
+        rpm_install_tests(rpm_repo: rpm_repo)
+      end
     end
 
     # All tests for tarball install method

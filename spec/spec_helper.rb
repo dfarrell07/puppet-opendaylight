@@ -234,6 +234,7 @@ def tarball_install_tests(options = {})
   tarball_url = options.fetch(:tarball_url, 'https://nexus.opendaylight.org/content/repositories/opendaylight.release/org/opendaylight/integration/distribution-karaf/0.4.2-Beryllium-SR2/distribution-karaf-0.4.2-Beryllium-SR2.tar.gz')
   unitfile_url = options.fetch(:unitfile_url, 'https://github.com/dfarrell07/opendaylight-systemd/archive/master/opendaylight-unitfile.tar.gz')
   osfamily = options.fetch(:osfamily, 'RedHat')
+  rpm_repo = options.fetch(:rpm_repo, 'opendaylight-42-release')
 
   # Confirm presence of tarball-related resources
   it { should contain_archive('opendaylight') }
@@ -355,43 +356,33 @@ def tarball_install_tests(options = {})
   end
 
   # Verify that there are no unexpected resources from RPM-type installs
-  it { should_not contain_yumrepo('opendaylight-42-release') }
+  it { should_not contain_yumrepo(rpm_repo) }
   it { should_not contain_package('opendaylight') }
 end
 
 def rpm_install_tests(options = {})
   # Extract params
-  # Choose Yum URL based on OS (CentOS vs Fedora)
-  # NB: Currently using the CentOS CBS for both Fedora and CentOS
-  operatingsystem  = options.fetch(:operatingsystem, 'CentOS')
-  case operatingsystem
-  when 'CentOS'
-    yum_repo = 'http://cbs.centos.org/repos/nfv7-opendaylight-42-release/$basearch/os/'
-  when 'Fedora'
-    yum_repo = 'http://cbs.centos.org/repos/nfv7-opendaylight-42-release/$basearch/os/'
-  else
-    fail("Unknown operatingsystem: #{operatingsystem}")
-  end
+  rpm_repo = options.fetch(:rpm_repo, 'opendaylight-42-release')
 
   # Default to CentOS 7 Yum repo URL
 
   # Confirm presence of RPM-related resources
-  it { should contain_yumrepo('opendaylight-42-release') }
+  it { should contain_yumrepo(rpm_repo) }
   it { should contain_package('opendaylight') }
 
   # Confirm relationships between RPM-related resources
-  it { should contain_package('opendaylight').that_requires('Yumrepo[opendaylight-42-release]') }
-  it { should contain_yumrepo('opendaylight-42-release').that_comes_before('Package[opendaylight]') }
+  it { should contain_package('opendaylight').that_requires("Yumrepo[#{rpm_repo}]") }
+  it { should contain_yumrepo(rpm_repo).that_comes_before('Package[opendaylight]') }
 
   # Confirm properties of RPM-related resources
   # NB: These hashes don't work with Ruby 1.8.7, but we
   #   don't support 1.8.7 so that's okay. See issue #36.
   it {
-    should contain_yumrepo('opendaylight-42-release').with(
+    should contain_yumrepo(rpm_repo).with(
       'enabled'     => '1',
       'gpgcheck'    => '0',
-      'descr'       => 'CentOS CBS OpenDaylight Berillium testing repository',
-      'baseurl'     => yum_repo,
+      'descr'       => 'OpenDaylight SDN Controller',
+      'baseurl'     => "http://cbs.centos.org/repos/nfv7-#{rpm_repo}/$basearch/os/",
     )
   }
   it {
@@ -405,6 +396,7 @@ end
 def unsupported_os_tests(options = {})
   # Extract params
   expected_msg = options.fetch(:expected_msg)
+  rpm_repo = options.fetch(:rpm_repo, 'opendaylight-42-release')
 
   # Confirm that classes fail on unsupported OSs
   it { expect { should contain_class('opendaylight') }.to raise_error(Puppet::Error, /#{expected_msg}/) }
@@ -413,7 +405,7 @@ def unsupported_os_tests(options = {})
   it { expect { should contain_class('opendaylight::service') }.to raise_error(Puppet::Error, /#{expected_msg}/) }
 
   # Confirm that other resources fail on unsupported OSs
-  it { expect { should contain_yumrepo('opendaylight-42-release') }.to raise_error(Puppet::Error, /#{expected_msg}/) }
+  it { expect { should contain_yumrepo(rpm_repo) }.to raise_error(Puppet::Error, /#{expected_msg}/) }
   it { expect { should contain_package('opendaylight') }.to raise_error(Puppet::Error, /#{expected_msg}/) }
   it { expect { should contain_service('opendaylight') }.to raise_error(Puppet::Error, /#{expected_msg}/) }
   it { expect { should contain_file('org.apache.karaf.features.cfg') }.to raise_error(Puppet::Error, /#{expected_msg}/) }

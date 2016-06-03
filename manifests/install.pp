@@ -8,21 +8,14 @@
 #
 class opendaylight::install {
   if $opendaylight::install_method == 'rpm' {
-    # Choose Yum URL based on OS (CentOS vs Fedora)
-    # NB: Currently using the CentOS CBS for both Fedora and CentOS
-    $base_url = $::operatingsystem ? {
-      'CentOS' => 'http://cbs.centos.org/repos/nfv7-opendaylight-42-release/$basearch/os/',
-      'Fedora' => 'http://cbs.centos.org/repos/nfv7-opendaylight-42-release/$basearch/os/',
-    }
-
     # Add OpenDaylight's Yum repository
-    yumrepo { 'opendaylight-42-release':
+    yumrepo { $opendaylight::rpm_repo:
       # 'ensure' isn't supported with Puppet <3.5
       # Seems to default to present, but docs don't say
       # https://docs.puppetlabs.com/references/3.4.0/type.html#yumrepo
       # https://docs.puppetlabs.com/references/3.5.0/type.html#yumrepo
-      baseurl  => $base_url,
-      descr    => 'CentOS CBS OpenDaylight Berillium testing repository',
+      baseurl  => "http://cbs.centos.org/repos/nfv7-${opendaylight::rpm_repo}/\$basearch/os/",
+      descr    => 'OpenDaylight SDN Controller',
       enabled  => 1,
       # NB: RPM signing is an active TODO, but is not done. We will enable
       #     this gpgcheck once the RPM supports it.
@@ -33,7 +26,7 @@ class opendaylight::install {
     # Install the OpenDaylight RPM
     package { 'opendaylight':
       ensure  => present,
-      require => Yumrepo['opendaylight-42-release'],
+      require => Yumrepo[$opendaylight::rpm_repo],
     }
     ->
     # Configure the systemd file to force ipv4 binds (instead of ipv6)

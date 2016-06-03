@@ -46,12 +46,17 @@ end
 #   http://serverspec.org/resource_types.html
 
 def install_odl(options = {})
+  # Install params are passed via environment var, set in Rakefile
+  # Changing the installed version of ODL via `puppet apply` is not supported
+  # by puppet-odl, so it's not possible to vary these params in the same
+  # Beaker test run. Do a different run passing different env vars.
+  install_method = ENV['INSTALL_METHOD']
+  rpm_repo = ENV['RPM_REPO']
+
   # NB: These param defaults should match the ones used by the opendaylight
   #   class, which are defined in opendaylight::params
   # TODO: Remove this possible source of bugs^^
   # Extract params if given, defaulting to odl class defaults if not
-  # Default install method is passed via environment var, set in Rakefile
-  install_method = options.fetch(:install_method, ENV['INSTALL_METHOD'])
   extra_features = options.fetch(:extra_features, [])
   default_features = options.fetch(:default_features,
     ['config', 'standard', 'region', 'package', 'kar', 'ssh', 'management'])
@@ -64,6 +69,7 @@ def install_odl(options = {})
     pp = <<-EOS
     class { 'opendaylight':
       install_method => #{install_method},
+      rpm_repo => #{rpm_repo},
       default_features => #{default_features},
       extra_features => #{extra_features},
       odl_rest_port=> #{odl_rest_port},
@@ -302,7 +308,9 @@ end
 
 # Shared function that handles validations specific to RPM-type installs
 def rpm_validations()
-  describe yumrepo('opendaylight-42-release') do
+  rpm_repo = ENV['RPM_REPO']
+
+  describe yumrepo(rpm_repo) do
     it { should exist }
     it { should be_enabled }
   end
@@ -314,13 +322,15 @@ end
 
 # Shared function that handles validations specific to tarball-type installs
 def tarball_validations()
+  rpm_repo = ENV['RPM_REPO']
+
   describe package('opendaylight') do
     it { should_not be_installed }
   end
 
   # Repo checks break (not fail) when yum doesn't make sense (Ubuntu)
   if ['centos-7', 'fedora-22', 'fedora-23', 'fedora-23-docker'].include? ENV['RS_SET']
-    describe yumrepo('opendaylight-42-release') do
+    describe yumrepo(rpm_repo) do
       it { should_not exist }
       it { should_not be_enabled }
     end
