@@ -13,7 +13,7 @@ class opendaylight::params {
   $odl_rest_port = '8080'
   $odl_bind_ip = '0.0.0.0'
   $install_method = 'rpm'
-  $rpm_repo = 'opendaylight-4-release'
+  $rpm_repo = 'opendaylight-5-testing'
   $tarball_url = ''
   $unitfile_url = 'https://github.com/dfarrell07/opendaylight-systemd/archive/master/opendaylight-unitfile.tar.gz'
   $enable_l3 = 'no'

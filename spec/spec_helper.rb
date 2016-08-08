@@ -234,7 +234,7 @@ def tarball_install_tests(options = {})
   tarball_url = options.fetch(:tarball_url, '')
   unitfile_url = options.fetch(:unitfile_url, 'https://github.com/dfarrell07/opendaylight-systemd/archive/master/opendaylight-unitfile.tar.gz')
   osfamily = options.fetch(:osfamily, 'RedHat')
-  rpm_repo = options.fetch(:rpm_repo, 'opendaylight-4-release')
+  rpm_repo = options.fetch(:rpm_repo, 'opendaylight-5-testing')
 
   # Confirm presence of tarball-related resources
   it { should contain_archive('opendaylight') }
@@ -362,7 +362,7 @@ end
 
 def rpm_install_tests(options = {})
   # Extract params
-  rpm_repo = options.fetch(:rpm_repo, 'opendaylight-4-release')
+  rpm_repo = options.fetch(:rpm_repo, 'opendaylight-5-testing')
 
   # Default to CentOS 7 Yum repo URL
 
@@ -396,7 +396,7 @@ end
 def unsupported_os_tests(options = {})
   # Extract params
   expected_msg = options.fetch(:expected_msg)
-  rpm_repo = options.fetch(:rpm_repo, 'opendaylight-4-release')
+  rpm_repo = options.fetch(:rpm_repo, 'opendaylight-5-testing')
 
   # Confirm that classes fail on unsupported OSs
   it { expect { should contain_class('opendaylight') }.to raise_error(Puppet::Error, /#{expected_msg}/) }
