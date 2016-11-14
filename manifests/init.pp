@@ -29,21 +29,24 @@
 #   Array of IPs for each node in the HA cluster.
 # [*ha_node_index*]
 #   Index of ha_node_ips for this node.
+# [*security_group_mode*]
+#   Sets the mode to use for security groups (stateful, learn, stateless, transparent)
 #
 class opendaylight (
-  $default_features = $::opendaylight::params::default_features,
-  $extra_features = $::opendaylight::params::extra_features,
-  $odl_rest_port = $::opendaylight::params::odl_rest_port,
-  $odl_bind_ip = $::opendaylight::params::odl_bind_ip,
-  $install_method = $::opendaylight::params::install_method,
-  $rpm_repo = $::opendaylight::params::rpm_repo,
-  $tarball_url = $::opendaylight::params::tarball_url,
-  $unitfile_url = $::opendaylight::params::unitfile_url,
-  $enable_l3 = $::opendaylight::params::enable_l3,
-  $log_levels = $::opendaylight::params::log_levels,
-  $enable_ha = $::opendaylight::params::enable_ha,
-  $ha_node_ips = $::opendaylight::params::ha_node_ips,
-  $ha_node_index = $::opendaylight::params::ha_node_index,
+  $default_features    = $::opendaylight::params::default_features,
+  $extra_features      = $::opendaylight::params::extra_features,
+  $odl_rest_port       = $::opendaylight::params::odl_rest_port,
+  $odl_bind_ip         = $::opendaylight::params::odl_bind_ip,
+  $install_method      = $::opendaylight::params::install_method,
+  $rpm_repo            = $::opendaylight::params::rpm_repo,
+  $tarball_url         = $::opendaylight::params::tarball_url,
+  $unitfile_url        = $::opendaylight::params::unitfile_url,
+  $enable_l3           = $::opendaylight::params::enable_l3,
+  $log_levels          = $::opendaylight::params::log_levels,
+  $enable_ha           = $::opendaylight::params::enable_ha,
+  $ha_node_ips         = $::opendaylight::params::ha_node_ips,
+  $ha_node_index       = $::opendaylight::params::ha_node_index,
+  $security_group_mode = $::opendaylight::params::security_group_mode,
 ) inherits ::opendaylight::params {
 
   # Validate OS family
@@ -63,6 +66,9 @@ class opendaylight (
       if $::operatingsystemmajrelease != '7' {
         # RHEL/CentOS versions < 7 not supported as they lack systemd
         fail("Unsupported OS: ${::operatingsystem} ${::operatingsystemmajrelease}")
+      } elsif (versioncmp($::operatingsystemrelease, '7.3') < 0) {
+        # Versions < 7.3 do not support stateful security groups
+        $stateful_unsupported = true
       }
     }
     fedora: {
