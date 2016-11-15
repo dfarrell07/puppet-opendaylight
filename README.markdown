@@ -410,6 +410,14 @@ Default: `'https://github.com/dfarrell07/opendaylight-systemd/archive/master/ope
 Valid options: A valid URL to an ODL systemd .service file (archived in a
 tarball) as a string.
 
+##### `security_group_mode`
+
+Specifies the mode to use for security groups.
+
+Default: `stateful`
+
+Valid options: `transparent`, `learn`, `statless`
+
 ## Limitations
 
 * Tested on Fedora 22, 23, CentOS 7 and Ubuntu 14.04.
