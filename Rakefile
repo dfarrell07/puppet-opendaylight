@@ -39,6 +39,10 @@ task :metadata do
   sh "metadata-json-lint metadata.json"
 end
 
+task :travis_lint do
+  sh "travis lint .travis.yml"
+end
+
 desc "Run syntax, lint, and spec tests."
 task :test => [
   :syntax,
