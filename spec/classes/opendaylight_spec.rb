@@ -602,6 +602,7 @@ describe 'opendaylight' do
             :operatingsystem => operatingsystem,
             :operatingsystemrelease => operatingsystemrelease,
             :operatingsystemmajrelease => operatingsystemmajrelease,
+            :architecture => 'x86_64',
             :path => ['/usr/local/bin', '/usr/bin', '/bin'],
           }}
 
@@ -626,6 +627,7 @@ describe 'opendaylight' do
             :operatingsystem => operatingsystem,
             :operatingsystemrelease => operatingsystemrelease,
             :operatingsystemmajrelease => operatingsystemmajrelease,
+            :architecture => 'x86_64',
             :path => ['/usr/local/bin', '/usr/bin', '/bin'],
           }}
 
@@ -654,6 +656,7 @@ describe 'opendaylight' do
             :operatingsystem => operatingsystem,
             :operatingsystemrelease => operatingsystemrelease,
             :operatingsystemmajrelease => operatingsystemmajrelease,
+            :architecture => 'x86_64',
             :path => ['/usr/local/bin', '/usr/bin', '/bin'],
           }}
 
@@ -679,6 +682,7 @@ describe 'opendaylight' do
             :operatingsystem => operatingsystem,
             :operatingsystemrelease => operatingsystemrelease,
             :operatingsystemmajrelease => operatingsystemmajrelease,
+            :architecture => 'x86_64',
             :path => ['/usr/local/bin', '/usr/bin', '/bin'],
           }}
 
@@ -748,7 +752,7 @@ describe 'opendaylight' do
 
       # Run test that specialize in checking security groups
       # Note that this function is defined in spec_helper
-      enable_sg_tests(security_group_mode: 'stateful', osrelease: '7.2.1511')
+      enable_sg_tests(security_group_mode: 'stateful', osrelease: '7.3')
     end
 
     context 'using transparent with unsupported stateful' do
