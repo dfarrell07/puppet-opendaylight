@@ -293,7 +293,7 @@ def enable_l3_validations(options = {})
       it { should be_file }
       it { should be_owned_by 'odl' }
       it { should be_grouped_into 'odl' }
-      its(:content) { should match /^ovsdb.l3.fwd.enabled=yes/ }
+      its(:content) { should match /^ovsdb.l3.fwd.enabled=yes\novsdb.l3.arp.responder.disabled=no/ }
     end
   elsif [false, 'no'].include? enable_l3
     # Confirm ODL OVSDB L3 is disabled

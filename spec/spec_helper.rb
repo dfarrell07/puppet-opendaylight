@@ -210,7 +210,7 @@ def enable_l3_tests(options = {})
         'path'        => '/opt/opendaylight/etc/custom.properties',
         'owner'   => 'odl',
         'group'   => 'odl',
-        'content'     => /^ovsdb.l3.fwd.enabled=yes/
+        'content'     => /^ovsdb.l3.fwd.enabled=yes\novsdb.l3.arp.responder.disabled=no/
       )
     }
   elsif [false, 'no'].include? enable_l3
