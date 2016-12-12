@@ -1,6 +1,5 @@
 [![CI Status][4]][1]
 [![Dependency Status][5]][2]
-[![Project Chatroom][6]][3]
 
 # OpenDaylight
 
@@ -440,10 +439,8 @@ See our [git commit history][17] for contributor information.
 
 [1]: https://travis-ci.org/dfarrell07/puppet-opendaylight
 [2]: https://gemnasium.com/dfarrell07/puppet-opendaylight
-[3]: https://gitter.im/dfarrell07/puppet-opendaylight?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [4]: https://travis-ci.org/dfarrell07/puppet-opendaylight.svg
 [5]: https://gemnasium.com/dfarrell07/puppet-opendaylight.svg
-[6]: https://badges.gitter.im/Join%20Chat.svg
 [7]: http://www.opendaylight.org/
 [8]: https://github.com/dfarrell07/puppet-opendaylight/blob/master/CONTRIBUTING.markdown#issues
 [9]: https://github.com/dfarrell07/opendaylight-systemd/
