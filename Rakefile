@@ -35,7 +35,7 @@ exclude_paths = [
 PuppetLint.configuration.ignore_paths = exclude_paths
 PuppetSyntax.exclude_paths = exclude_paths
 
-task :metadata do
+task :metadata_lint do
   sh "metadata-json-lint metadata.json"
 end
 
@@ -48,7 +48,7 @@ task :test => [
   :syntax,
   :lint,
   :spec,
-  :metadata,
+  :metadata_lint,
 ]
 
 desc "Run Beaker tests against CentOS 7 with latest Beryllium RPM"
