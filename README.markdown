@@ -213,7 +213,7 @@ class { 'opendaylight':
 }
 ```
 
-### Enable ODL OVSDB HA
+### Enabling ODL OVSDB HA
 
 To enable ODL OVSDB HA, use the `enable_ha` flag. It's disabled by default.
 
