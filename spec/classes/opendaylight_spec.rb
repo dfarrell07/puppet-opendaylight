@@ -46,6 +46,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized enabling L3 tests elsewhere
             # Note that this function is defined in spec_helper
             enable_l3_tests
+
+            # Run tests that specialize in checking ODL OVSDB HA config
+            # NB: Only testing defaults here, specialized enabling HA tests elsewhere
+            # Note that this function is defined in spec_helper
+            enable_ha_tests
           end
         end
 
@@ -105,6 +110,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized enabling L3 tests elsewhere
             # Note that this function is defined in spec_helper
             enable_l3_tests
+
+            # Run tests that specialize in checking ODL OVSDB HA config
+            # NB: Only testing defaults here, specialized enabling HA tests elsewhere
+            # Note that this function is defined in spec_helper
+            enable_ha_tests
           end
         end
 
@@ -180,6 +190,11 @@ describe 'opendaylight' do
             # NB: Only testing defaults here, specialized enabling L3 tests elsewhere
             # Note that this function is defined in spec_helper
             enable_l3_tests
+
+            # Run tests that specialize in checking ODL OVSDB HA config
+            # NB: Only testing defaults here, specialized enabling HA tests elsewhere
+            # Note that this function is defined in spec_helper
+            enable_ha_tests
           end
         end
 
@@ -505,7 +520,7 @@ describe 'opendaylight' do
       }}
 
       let(:params) {{
-        :enable_l3 => false ,
+        :enable_l3 => false,
       }}
 
       # Run shared tests applicable to all supported OSs
@@ -537,6 +552,77 @@ describe 'opendaylight' do
       enable_l3_tests(enable_l3: true)
     end
   end
+
+  # All OVSDB HA enable/disable tests
+  describe 'OVSDB HA enable/disable tests' do
+    # Non-OS-type tests assume CentOS 7
+    #   See issue #43 for reasoning:
+    #   https://github.com/dfarrell07/puppet-opendaylight/issues/43#issue-57343159
+    osfamily = 'RedHat'
+    operatingsystem = 'CentOS'
+    operatingsystemmajrelease = '7'
+    context 'using enable_ha default' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{ }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking ODL OVSDB HA config
+      # Note that this function is defined in spec_helper
+      enable_ha_tests
+    end
+
+    context 'using false for enable_ha' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{
+        :enable_ha => false,
+      }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking ODL OVSDB HA config
+      # Note that this function is defined in spec_helper
+      enable_ha_tests(enable_ha: false)
+    end
+
+    context 'using true for enable_ha' do
+      context 'using ha_node_count >=2' do
+        let(:facts) {{
+          :osfamily => osfamily,
+          :operatingsystem => operatingsystem,
+          :operatingsystemmajrelease => operatingsystemmajrelease,
+        }}
+
+        let(:params) {{
+          :enable_ha => true,
+          :ha_node_ips => ['0.0.0.0', '127.0.0.1']
+        }}
+
+        # Run shared tests applicable to all supported OSs
+        # Note that this function is defined in spec_helper
+        generic_tests
+
+        # Run test that specialize in checking ODL OVSDB HA config
+        # Note that this function is defined in spec_helper
+        enable_ha_tests(enable_ha: true, ha_node_ips: ['0.0.0.0', '127.0.0.1'])
+      end
+    end
+  end
+
 
   # All install method tests
   describe 'install method tests' do

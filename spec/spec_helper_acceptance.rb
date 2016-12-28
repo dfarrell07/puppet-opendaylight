@@ -63,6 +63,9 @@ def install_odl(options = {})
   odl_rest_port = options.fetch(:odl_rest_port, 8080)
   log_levels = options.fetch(:log_levels, {})
   enable_l3 = options.fetch(:enable_l3, 'no')
+  enable_ha = options.fetch(:enable_ha, false)
+  ha_node_ips = options.fetch(:ha_node_ips, [])
+  ha_node_index = options.fetch(:ha_node_index, '')
 
   # Build script for consumption by Puppet apply
   it 'should work idempotently with no errors' do
@@ -74,6 +77,9 @@ def install_odl(options = {})
       extra_features => #{extra_features},
       odl_rest_port=> #{odl_rest_port},
       enable_l3=> #{enable_l3},
+      enable_ha=> #{enable_ha},
+      ha_node_ips=> #{ha_node_ips},
+      ha_node_index=> #{ha_node_index},
       log_levels=> #{log_levels},
     }
     EOS
@@ -302,6 +308,33 @@ def enable_l3_validations(options = {})
       it { should be_owned_by 'odl' }
       it { should be_grouped_into 'odl' }
       its(:content) { should match /^ovsdb.l3.fwd.enabled=no/ }
+    end
+  end
+end
+
+# Shared function for validations related to ODL OVSDB HA config
+def enable_ha_validations(options = {})
+  # NB: This param default should match the one used by the opendaylight
+  #   class, which is defined in opendaylight::params
+  # TODO: Remove this possible source of bugs^^
+  enable_ha = options.fetch(:enable_ha, false)
+  ha_node_ips = options.fetch(:ha_node_ips, [])
+  ha_node_index = options.fetch(:ha_node_index, '')
+  # HA_NODE_IPS size
+  ha_node_count = ha_node_ips.size
+
+  if enable_ha
+    # Confirm ODL OVSDB HA is enabled
+    if ha_node_count >=2
+      # Check for HA_NODE_COUNT >= 2
+      describe file('/opt/opendaylight/deploy/jolokia.xml') do
+      it { should be_file }
+      it { should be_owned_by 'odl' }
+      it { should be_grouped_into 'odl' }
+    end
+    else
+      # Check for HA_NODE_COUNT < 2
+      fail("Number of HA nodes less than 2: #{ha_node_count} and HA Enabled")
     end
   end
 end

@@ -14,12 +14,14 @@ custom_filters = [
   'Class[Java::Params]',
   'Class[Stdlib::Stages]',
   'Class[Stdlib]',
+  'Exec[Configure ODL OVSDB Clustering]',
   'Exec[download archive opendaylight.tar.gz and check sum]',
   'Exec[download archive opendaylight-systemd.tar.gz and check sum]',
   'Exec[opendaylight unpack]',
   'Exec[opendaylight-systemd unpack]',
   'Exec[rm-on-error-opendaylight.tar.gz]',
   'Exec[rm-on-error-opendaylight-systemd.tar.gz]',
+  'Exec[reload_systemd_units]',
   'Exec[update-java-alternatives]',
   'Package[curl]',
   'Stage[deploy]',
@@ -227,6 +229,33 @@ def enable_l3_tests(options = {})
   end
 end
 
+def enable_ha_tests(options = {})
+  # Extract params
+  enable_ha = options.fetch(:enable_ha, false)
+  ha_node_ips = options.fetch(:ha_node_ips, [])
+  ha_node_index = options.fetch(:ha_node_index, '')
+  # HA_NODE_IPS size
+  ha_node_count = ha_node_ips.size
+
+  if enable_ha
+    # Confirm ODL OVSDB HA is enabled
+    if ha_node_count >=2
+      # Check for HA_NODE_COUNT >= 2
+      it {
+        should contain_file('opendaylight/jolokia.xml').with(
+          'ensure'  => 'file',
+          'path'  => '/opt/opendaylight/deploy/jolokia.xml',
+          'owner' => 'odl',
+          'group' => 'odl'
+        )
+      }
+    else
+      # Check for HA_NODE_COUNT < 2
+      fail("Number of HA nodes less than 2: #{ha_node_count} and HA Enabled")
+    end
+  end
+end
+
 def tarball_install_tests(options = {})
   # Extract params
   # NB: These default values should be the same as ones in opendaylight::params
@@ -390,6 +419,15 @@ def rpm_install_tests(options = {})
       'ensure'   => 'present',
     )
   }
+
+  it {
+    should contain_file_line('odl_start_ipv4').with(
+      'ensure' => 'present',
+      'path' => '/usr/lib/systemd/system/opendaylight.service',
+      'line' => 'Environment=_JAVA_OPTIONS=\'-Djava.net.preferIPv4Stack=true\'',
+      'after' => 'ExecStart=/opt/opendaylight/bin/start',
+    )
+  }
 end
 
 # Shared tests for unsupported OSs
@@ -416,6 +454,11 @@ def enable_sg_tests(sg_mode='stateful', os_release)
   # Extract params
   # NB: This default value should be the same as one in opendaylight::params
   # TODO: Remove this possible source of bugs^^
+
+  it { should contain_file('/opt/opendaylight/etc/opendaylight') }
+  it { should contain_file('/opt/opendaylight/etc/opendaylight/datastore')}
+  it { should contain_file('/opt/opendaylight/etc/opendaylight/datastore/initial')}
+  it { should contain_file('/opt/opendaylight/etc/opendaylight/datastore/initial/config')}
 
   if os_release != '7.3' and sg_mode == 'stateful'
     # Confirm sg_mode becomes learn

@@ -30,7 +30,7 @@ class opendaylight::install {
     }
     ->
     # Configure the systemd file to force ipv4 binds (instead of ipv6)
-    file_line { 'odl_start_ipv4 ':
+    file_line { 'odl_start_ipv4':
       ensure => present,
       path   => '/usr/lib/systemd/system/opendaylight.service',
       line   => 'Environment=_JAVA_OPTIONS=\'-Djava.net.preferIPv4Stack=true\'',
