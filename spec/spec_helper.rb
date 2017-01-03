@@ -49,12 +49,12 @@ def generic_tests()
   it { should contain_class('opendaylight::service') }
 
   # Confirm relationships between classes
-  it { should contain_class('opendaylight::install').that_comes_before('opendaylight::config') }
-  it { should contain_class('opendaylight::config').that_requires('opendaylight::install') }
-  it { should contain_class('opendaylight::config').that_notifies('opendaylight::service') }
-  it { should contain_class('opendaylight::service').that_subscribes_to('opendaylight::config') }
-  it { should contain_class('opendaylight::service').that_comes_before('opendaylight') }
-  it { should contain_class('opendaylight').that_requires('opendaylight::service') }
+  it { should contain_class('opendaylight::install').that_comes_before('Class[opendaylight::config]') }
+  it { should contain_class('opendaylight::config').that_requires('Class[opendaylight::install]') }
+  it { should contain_class('opendaylight::config').that_notifies('Class[opendaylight::service]') }
+  it { should contain_class('opendaylight::service').that_subscribes_to('Class[opendaylight::config]') }
+  it { should contain_class('opendaylight::service').that_comes_before('Class[opendaylight]') }
+  it { should contain_class('opendaylight').that_requires('Class[opendaylight::service]') }
 
   # Confirm presence of generic resources
   it { should contain_service('opendaylight') }
