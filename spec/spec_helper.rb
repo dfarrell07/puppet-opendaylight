@@ -14,12 +14,14 @@ custom_filters = [
   'Class[Java::Params]',
   'Class[Stdlib::Stages]',
   'Class[Stdlib]',
+  'Exec[Configure ODL OVSDB Clustering]',
   'Exec[download archive opendaylight.tar.gz and check sum]',
   'Exec[download archive opendaylight-systemd.tar.gz and check sum]',
   'Exec[opendaylight unpack]',
   'Exec[opendaylight-systemd unpack]',
   'Exec[rm-on-error-opendaylight.tar.gz]',
   'Exec[rm-on-error-opendaylight-systemd.tar.gz]',
+  'Exec[reload_systemd_units]',
   'Exec[update-java-alternatives]',
   'Package[curl]',
   'Stage[deploy]',
@@ -49,12 +51,12 @@ def generic_tests()
   it { should contain_class('opendaylight::service') }
 
   # Confirm relationships between classes
-  it { should contain_class('opendaylight::install').that_comes_before('opendaylight::config') }
-  it { should contain_class('opendaylight::config').that_requires('opendaylight::install') }
-  it { should contain_class('opendaylight::config').that_notifies('opendaylight::service') }
-  it { should contain_class('opendaylight::service').that_subscribes_to('opendaylight::config') }
-  it { should contain_class('opendaylight::service').that_comes_before('opendaylight') }
-  it { should contain_class('opendaylight').that_requires('opendaylight::service') }
+  it { should contain_class('opendaylight::install').that_comes_before('Class[opendaylight::config]') }
+  it { should contain_class('opendaylight::config').that_requires('Class[opendaylight::install]') }
+  it { should contain_class('opendaylight::config').that_notifies('Class[opendaylight::service]') }
+  it { should contain_class('opendaylight::service').that_subscribes_to('Class[opendaylight::config]') }
+  it { should contain_class('opendaylight::service').that_comes_before('Class[opendaylight]') }
+  it { should contain_class('opendaylight').that_requires('Class[opendaylight::service]') }
 
   # Confirm presence of generic resources
   it { should contain_service('opendaylight') }
@@ -227,6 +229,33 @@ def enable_l3_tests(options = {})
   end
 end
 
+def enable_ha_tests(options = {})
+  # Extract params
+  enable_ha = options.fetch(:enable_ha, false)
+  ha_node_ips = options.fetch(:ha_node_ips, [])
+  ha_node_index = options.fetch(:ha_node_index, '')
+  # HA_NODE_IPS size
+  ha_node_count = ha_node_ips.size
+
+  if enable_ha
+    # Confirm ODL OVSDB HA is enabled
+    if ha_node_count >=2
+      # Check for HA_NODE_COUNT >= 2
+      it {
+        should contain_file('opendaylight/jolokia.xml').with(
+          'ensure'  => 'file',
+          'path'  => '/opt/opendaylight/deploy/jolokia.xml',
+          'owner' => 'odl',
+          'group' => 'odl'
+        )
+      }
+    else
+      # Check for HA_NODE_COUNT < 2
+      fail("Number of HA nodes less than 2: #{ha_node_count} and HA Enabled")
+    end
+  end
+end
+
 def tarball_install_tests(options = {})
   # Extract params
   # NB: These default values should be the same as ones in opendaylight::params
@@ -390,6 +419,15 @@ def rpm_install_tests(options = {})
       'ensure'   => 'present',
     )
   }
+
+  it {
+    should contain_file_line('odl_start_ipv4').with(
+      'ensure' => 'present',
+      'path' => '/usr/lib/systemd/system/opendaylight.service',
+      'line' => 'Environment=_JAVA_OPTIONS=\'-Djava.net.preferIPv4Stack=true\'',
+      'after' => 'ExecStart=/opt/opendaylight/bin/start',
+    )
+  }
 end
 
 # Shared tests for unsupported OSs
@@ -411,15 +449,18 @@ def unsupported_os_tests(options = {})
   it { expect { should contain_file('org.apache.karaf.features.cfg') }.to raise_error(Puppet::Error, /#{expected_msg}/) }
 end
 
-# Shared tests that specialize in testing enabling L3 via ODL OVSDB
-def enable_sg_tests(options = {})
+# Shared tests that specialize in testing security group mode
+def enable_sg_tests(sg_mode='stateful', os_release)
   # Extract params
   # NB: This default value should be the same as one in opendaylight::params
   # TODO: Remove this possible source of bugs^^
-  sg_mode = options.fetch(:security_group_mode, 'stateful')
-  os_release = options.fetch(:osrelease)
 
-  if !os_release.include? '7.3' and ['stateful'].include? sg_mode
+  it { should contain_file('/opt/opendaylight/etc/opendaylight') }
+  it { should contain_file('/opt/opendaylight/etc/opendaylight/datastore')}
+  it { should contain_file('/opt/opendaylight/etc/opendaylight/datastore/initial')}
+  it { should contain_file('/opt/opendaylight/etc/opendaylight/datastore/initial/config')}
+
+  if os_release != '7.3' and sg_mode == 'stateful'
     # Confirm sg_mode becomes learn
     it {
       should contain_file('netvirt-aclservice-config.xml').with(
