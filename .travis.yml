@@ -15,15 +15,15 @@ env:
   - PUPPET_VERSION="~> 4.8.0"
 matrix:
   exclude:
-  - rvm: 2.2.3
-    env: PUPPET_VERSION="~> 3.8.0"
-  - rvm: 2.2.6
-    env: PUPPET_VERSION="~> 3.8.0"
-  - rvm: 2.3.1
-    env: PUPPET_VERSION="~> 3.8.0"
+    - rvm: 2.2.3
+      env: PUPPET_VERSION="~> 3.8.0"
+    - rvm: 2.2.6
+      env: PUPPET_VERSION="~> 3.8.0"
+    - rvm: 2.3.1
+      env: PUPPET_VERSION="~> 3.8.0"
 notifications:
-    email:
-        recipients:
-            - dfarrell@redhat.com
-    on_success: change
-    on_failure: change
+  email:
+    recipients:
+      - dfarrell@redhat.com
+  on_success: change
+  on_failure: change
