@@ -35,80 +35,76 @@ exclude_paths = [
 PuppetLint.configuration.ignore_paths = exclude_paths
 PuppetSyntax.exclude_paths = exclude_paths
 
+# Linting
+
 task :metadata_lint do
   sh "metadata-json-lint metadata.json"
 end
 
 task :travis_lint do
-  sh "travis lint .travis.yml"
+  # Using "echo y" to accept interactive "install shell completion?" prompt
+  sh 'echo "y" travis lint .travis.yml --debug'
 end
+
+# TODO: Add Coala helper
+
+# CentOS VMs
+
+desc "Beaker tests against CentOS 7 VM with latest Boron testing RPM"
+task :cent_5test_vm do
+  sh "RS_SET=centos-7 INSTALL_METHOD=rpm RPM_REPO='opendaylight-5-testing' bundle exec rake beaker"
+end
+
+desc "Beaker tests against CentOS 7 VM with latest Carbon testing RPM"
+task :cent_6test_vm do
+  sh "RS_SET=centos-7 INSTALL_METHOD=rpm RPM_REPO='opendaylight-6-testing' bundle exec rake beaker"
+end
+
+desc "Beaker tests against CentOS 7 VM with latest Boron release RPM"
+task :cent_5rel_vm do
+  sh "RS_SET=centos-7 INSTALL_METHOD=rpm RPM_REPO='opendaylight-5-release' bundle exec rake beaker"
+end
+
+# CentOS Containers
+
+desc "Beaker tests against CentOS 7 container with latest Boron testing RPM"
+task :cent_5test_dock do
+  sh "RS_SET=centos-7-docker INSTALL_METHOD=rpm RPM_REPO='opendaylight-5-testing' bundle exec rake beaker"
+end
+
+desc "Beaker tests against CentOS 7 container with latest Carbon testing RPM"
+task :cent_6test_dock do
+  sh "RS_SET=centos-7-docker INSTALL_METHOD=rpm RPM_REPO='opendaylight-6-testing' bundle exec rake beaker"
+end
+
+desc "Beaker tests against CentOS 7 container with latest Boron release RPM"
+task :cent_5rel_dock do
+  sh "RS_SET=centos-7-docker INSTALL_METHOD=rpm RPM_REPO='opendaylight-5-release' bundle exec rake beaker"
+end
+
+# Multi-test helpers
 
 desc "Run syntax, lint, and spec tests."
 task :test => [
   :syntax,
   :lint,
-  :spec,
   :metadata_lint,
+  :travis_lint,
+  :spec,
 ]
 
-desc "Run Beaker tests against CentOS 7 with latest Beryllium RPM"
-task :centos_odl4testing do
-  sh "RS_SET=centos-7 INSTALL_METHOD=rpm RPM_REPO='opendaylight-4-testing' bundle exec rake beaker"
-end
-
-desc "Run Beaker tests against CentOS 7 with Beryllium SR2 4.2."
-task :centos_odl42 do
-  sh "RS_SET=centos-7 INSTALL_METHOD=rpm RPM_REPO='opendaylight-42-release' bundle exec rake beaker"
-end
-
-desc "Run Beaker tests against CentOS 7 with Beryllium 4.0."
-task :centos_odl40 do
-  sh "RS_SET=centos-7 INSTALL_METHOD=rpm RPM_REPO='opendaylight-40-release' bundle exec rake beaker"
-end
-
-desc "Run Beaker tests against CentOS 7 using tarball install."
-task :centos_tarball do
-  sh "RS_SET=centos-7 INSTALL_METHOD=tarball bundle exec rake beaker"
-end
-
-# NB: The centos:7.0.1406 and centos:7.1.1503 tags have fakesytemd, not
-# the actually-functional systemd-container installed on centos:7
-# https://github.com/CentOS/sig-cloud-instance-build/commit/3bf1e7bbf14deaa8c047c1dfbead6d0e8d0665f2
-desc "Run Beaker tests against CentOS 7 Docker node."
-task :centos_docker do
-  sh "RS_SET=centos-7-docker INSTALL_METHOD=rpm bundle exec rake beaker"
-end
-
-desc "Run Beaker tests against Fedora 22 node."
-task :fedora_22 do
-  sh "RS_SET=fedora-22 INSTALL_METHOD=rpm bundle exec rake beaker"
-end
-
-desc "Run Beaker tests against Fedora 23 node."
-task :fedora_23 do
-  sh "RS_SET=fedora-23 INSTALL_METHOD=rpm bundle exec rake beaker"
-end
-
-desc "Run Beaker tests against Fedora 23 Docker node."
-task :fedora_23_docker do
-  sh "RS_SET=fedora-23-docker INSTALL_METHOD=rpm bundle exec rake beaker"
-end
-
-desc "Run Beaker tests against Ubuntu 14.04 node."
-task :ubuntu_1404 do
-  sh "RS_SET=ubuntu-1404 INSTALL_METHOD=tarball bundle exec rake beaker"
-end
-
-desc "Run Beaker tests against Ubuntu 14.04 Docker node."
-task :ubuntu_1404_docker do
-  sh "RS_SET=ubuntu-1404-docker INSTALL_METHOD=tarball bundle exec rake beaker"
-end
-
-# Note: Puppet currently doesn't support Ubuntu versions newer than 14.04
-# https://docs.puppetlabs.com/guides/install_puppet/install_debian_ubuntu.html
-
-desc "All tests, including Beaker tests against all nodes."
-task :acceptance => [
+desc "All tests, use VMs for Beaker tests"
+task :acceptance_vm => [
   :test,
-  :centos_7_docker,
+  :cent_5rel_vm,
+  :cent_5test_vm,
+  :cent_6test_vm,
+]
+
+desc "All tests, use containers for Beaker tests"
+task :acceptance_dock => [
+  :test,
+  :cent_5rel_dock,
+  :cent_5test_dock,
+  :cent_6test_dock,
 ]
