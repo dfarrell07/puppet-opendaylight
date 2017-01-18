@@ -65,7 +65,7 @@ def install_odl(options = {})
   enable_l3 = options.fetch(:enable_l3, 'no')
   enable_ha = options.fetch(:enable_ha, false)
   ha_node_ips = options.fetch(:ha_node_ips, [])
-  ha_node_index = options.fetch(:ha_node_index, '')
+  ha_node_index = options.fetch(:ha_node_index, 0)
 
   # Build script for consumption by Puppet apply
   it 'should work idempotently with no errors' do
@@ -319,7 +319,7 @@ def enable_ha_validations(options = {})
   # TODO: Remove this possible source of bugs^^
   enable_ha = options.fetch(:enable_ha, false)
   ha_node_ips = options.fetch(:ha_node_ips, [])
-  ha_node_index = options.fetch(:ha_node_index, '')
+  ha_node_index = options.fetch(:ha_node_index, 0)
   # HA_NODE_IPS size
   ha_node_count = ha_node_ips.size
 

@@ -20,6 +20,6 @@ class opendaylight::params {
   $log_levels = {}
   $enable_ha = false
   $ha_node_ips = []
-  $ha_node_index = ''
+  $ha_node_index = 0
   $security_group_mode = 'stateful'
 }
