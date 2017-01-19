@@ -22,5 +22,5 @@ notifications:
   email:
     recipients:
       - dfarrell@redhat.com
-  on_success: change
-  on_failure: change
+    on_success: change
+    on_failure: change

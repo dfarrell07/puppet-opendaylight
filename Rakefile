@@ -43,7 +43,7 @@ end
 
 task :travis_lint do
   # Using "echo y" to accept interactive "install shell completion?" prompt
-  sh 'echo "y" travis lint .travis.yml --debug'
+  sh 'echo "y" | travis lint .travis.yml --debug'
 end
 
 # TODO: Add Coala helper
