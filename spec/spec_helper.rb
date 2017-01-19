@@ -233,7 +233,7 @@ def enable_ha_tests(options = {})
   # Extract params
   enable_ha = options.fetch(:enable_ha, false)
   ha_node_ips = options.fetch(:ha_node_ips, [])
-  ha_node_index = options.fetch(:ha_node_index, '')
+  ha_node_index = options.fetch(:ha_node_index, 0)
   # HA_NODE_IPS size
   ha_node_count = ha_node_ips.size
 
