@@ -62,7 +62,6 @@ def install_odl(options = {})
     ['config', 'standard', 'region', 'package', 'kar', 'ssh', 'management'])
   odl_rest_port = options.fetch(:odl_rest_port, 8080)
   log_levels = options.fetch(:log_levels, {})
-  enable_l3 = options.fetch(:enable_l3, 'no')
   enable_ha = options.fetch(:enable_ha, false)
   ha_node_ips = options.fetch(:ha_node_ips, [])
   ha_node_index = options.fetch(:ha_node_index, 0)
@@ -76,7 +75,6 @@ def install_odl(options = {})
       default_features => #{default_features},
       extra_features => #{extra_features},
       odl_rest_port=> #{odl_rest_port},
-      enable_l3=> #{enable_l3},
       enable_ha=> #{enable_ha},
       ha_node_ips=> #{ha_node_ips},
       ha_node_index=> #{ha_node_index},
@@ -157,13 +155,6 @@ def generic_validations()
 
   # Should contain log level config file
   describe file('/opt/opendaylight/etc/org.ops4j.pax.logging.cfg') do
-    it { should be_file }
-    it { should be_owned_by 'odl' }
-    it { should be_grouped_into 'odl' }
-  end
-
-  # Should contain ODL OVSDB L3 enable/disable config file
-  describe file('/opt/opendaylight/etc/custom.properties') do
     it { should be_file }
     it { should be_owned_by 'odl' }
     it { should be_grouped_into 'odl' }
@@ -282,32 +273,6 @@ def log_level_validations(options = {})
         it { should be_grouped_into 'odl' }
         its(:content) { should match /^log4j.logger.#{logger} = #{level}/ }
       end
-    end
-  end
-end
-
-# Shared function for validations related to ODL OVSDB L3 config
-def enable_l3_validations(options = {})
-  # NB: This param default should match the one used by the opendaylight
-  #   class, which is defined in opendaylight::params
-  # TODO: Remove this possible source of bugs^^
-  enable_l3 = options.fetch(:enable_l3, 'no')
-
-  if [true, 'yes'].include? enable_l3
-    # Confirm ODL OVSDB L3 is enabled
-    describe file('/opt/opendaylight/etc/custom.properties') do
-      it { should be_file }
-      it { should be_owned_by 'odl' }
-      it { should be_grouped_into 'odl' }
-      its(:content) { should match /^ovsdb.l3.fwd.enabled=yes\novsdb.l3.arp.responder.disabled=no/ }
-    end
-  elsif [false, 'no'].include? enable_l3
-    # Confirm ODL OVSDB L3 is disabled
-    describe file('/opt/opendaylight/etc/custom.properties') do
-      it { should be_file }
-      it { should be_owned_by 'odl' }
-      it { should be_grouped_into 'odl' }
-      its(:content) { should match /^ovsdb.l3.fwd.enabled=no/ }
     end
   end
 end

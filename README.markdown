@@ -16,7 +16,6 @@
   - [RPM Repo](#rpm-repo)
   - [Ports](#ports)
   - [Log Verbosity](#log-verbosity)
-  - [Enabling ODL OVSDB L3](#enabling-odl-ovsdb-l3)
   - [Enabling ODL OVSDB HA](#enabling-odl-ovsdb-ha)
 5. [Reference ](#reference)
 6. [Limitations](#limitations)
@@ -203,16 +202,6 @@ class { 'opendaylight':
 }
 ```
 
-### Enabling ODL OVSDB L3
-
-To enable the ODL OVSDB L3, use the `enable_l3` flag. It's disabled by default.
-
-```puppet
-class { 'opendaylight':
-  enable_l3 => true,
-}
-```
-
 ### Enabling ODL OVSDB HA
 
 To enable ODL OVSDB HA, use the `enable_ha` flag. It's disabled by default.
@@ -328,32 +317,6 @@ org.opendaylight.ovsdb.lib | INFO
 ```
 
 The main log output file is `/opt/opendaylight/data/log/karaf.log`.
-
-##### `enable_l3`
-
-Enable or disable ODL OVSDB L3 forwarding.
-
-Default: `'no'`
-
-Valid options: The strings `'yes'` or `'no'` or boolean values `true` and `false`.
-
-The ODL OVSDB L3 config in `/opt/opendaylight/etc/custom.properties` is set to
-the value of the `enable_l3` param.
-
-A manifest like
-
-```puppet
-class { 'opendaylight':
-  enable_l3 => true,
-}
-```
-
-Would would result in
-
-```
-ovsdb.l3.fwd.enabled=yes
-ovsdb.l3.arp.responder.disabled=no
-```
 
 ##### `enable_ha`
 
