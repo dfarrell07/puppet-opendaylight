@@ -93,6 +93,12 @@ task :test => [
   :spec,
 ]
 
+desc "Quick and important tests"
+task :sanity=> [
+  :test,
+  :cent_6test_dock,
+]
+
 desc "All tests, use VMs for Beaker tests"
 task :acceptance_vm => [
   :test,
