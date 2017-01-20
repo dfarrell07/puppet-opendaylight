@@ -14,24 +14,30 @@ Vagrant.configure(2) do |config|
     libvirt.cpus = 2
   end
 
-  config.vm.define "f23" do |f23|
-    f23.vm.box = "fedora/23-cloud-base"
+  # We run out of RAM once ODL starts with default 500MB
+  config.vm.provider :virtualbox do |virtualbox|
+    virtualbox.memory = 4096
+    virtualbox.cpus = 2
+  end
 
-    f23.vm.provision "shell", inline: "dnf update -y"
+  config.vm.define "fedora" do |fedora|
+    fedora.vm.box = "fedora/25-cloud-base"
+
+    fedora.vm.provision "shell", inline: "dnf update -y"
 
     # Install required gems via Bundler
-    f23.vm.provision "shell", inline: "dnf install -y rubygems ruby-devel gcc-c++ zlib-devel patch redhat-rpm-config make"
-    f23.vm.provision "shell", inline: "gem install bundler"
-    f23.vm.provision "shell", inline: "echo export PATH=$PATH:/usr/local/bin >> /home/vagrant/.bashrc"
-    f23.vm.provision "shell", inline: "echo export PATH=$PATH:/usr/local/bin >> /root/.bashrc"
-    f23.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle install" vagrant'
-    f23.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle update" vagrant'
+    fedora.vm.provision "shell", inline: "dnf install -y rubygems ruby-devel gcc-c++ zlib-devel patch redhat-rpm-config make"
+    fedora.vm.provision "shell", inline: "gem install bundler"
+    fedora.vm.provision "shell", inline: "echo export PATH=\\$PATH:/usr/local/bin >> /home/vagrant/.bashrc"
+    fedora.vm.provision "shell", inline: "echo export PATH=\\$PATH:/usr/local/bin >> /root/.bashrc"
+    fedora.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle install" vagrant'
+    fedora.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle update" vagrant'
 
     # Git is required for cloning Puppet module deps in `rake test`
-    f23.vm.provision "shell", inline: "dnf install -y git"
+    fedora.vm.provision "shell", inline: "dnf install -y git"
 
     # Install Docker for Docker-based Beaker tests
-    f23.vm.provision "shell", inline: "tee /etc/yum.repos.d/docker.repo <<-'EOF'
+    fedora.vm.provision "shell", inline: "tee /etc/yum.repos.d/docker.repo <<-'EOF'
 [dockerrepo]
 name=Docker Repository
 baseurl=https://yum.dockerproject.org/repo/main/fedora/$releasever/
@@ -40,30 +46,43 @@ gpgcheck=1
 gpgkey=https://yum.dockerproject.org/gpg
 EOF
 "
-    f23.vm.provision "shell", inline: "dnf install -y docker-engine xfsprogs"
-    f23.vm.provision "shell", inline: "usermod -a -G docker vagrant"
-    f23.vm.provision "shell", inline: "systemctl start docker"
-    f23.vm.provision "shell", inline: "systemctl enable docker"
+    fedora.vm.provision "shell", inline: "dnf install -y docker-engine xfsprogs"
+    fedora.vm.provision "shell", inline: "usermod -a -G docker vagrant"
+    fedora.vm.provision "shell", inline: "systemctl start docker"
+    fedora.vm.provision "shell", inline: "systemctl enable docker"
   end
 
-  config.vm.define "cent7" do |cent7|
-    cent7.vm.box = "centos/7"
+  config.vm.define "cent" do |cent|
+    cent.vm.box = "centos/7"
 
-    cent7.vm.provision "shell", inline: "yum update -y"
+    cent.vm.provision "shell", inline: "yum update -y"
+
+    # RVM to get recent Ruby. >=2.2.5 required by ruby_dep Gem, 2.0.0 in CentOS
+    cent.vm.provision "shell", inline: "yum install -y ruby-devel gcc-c++ zlib-devel patch redhat-rpm-config make"
+    cent.vm.provision "shell", inline: "gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3"
+    cent.vm.provision "shell", inline: "curl -L get.rvm.io | bash -s stable"
+    cent.vm.provision "shell", inline: "echo source /etc/profile.d/rvm.sh >> /home/vagrant/.bashrc"
+    cent.vm.provision "shell", inline: "rvm install 2.4.0"
+    cent.vm.provision "shell", inline: "ruby --version"
+    # This has to be done as a login shell to get rvm fns
+    # https://rvm.io/support/faq#what-shell-login-means-bash-l
+    # http://superuser.com/questions/306530/run-remote-ssh-command-with-full-login-shell
+    cent.vm.provision "shell", inline: 'bash -lc "rvm use 2.4.0 --default"'
+    cent.vm.provision "shell", inline: "ruby --version"
 
     # Install required gems via Bundler
-    cent7.vm.provision "shell", inline: "yum install -y rubygems ruby-devel gcc-c++ zlib-devel patch redhat-rpm-config make"
-    cent7.vm.provision "shell", inline: "gem install bundler"
-    cent7.vm.provision "shell", inline: "echo export PATH=$PATH:/usr/local/bin >> /home/vagrant/.bashrc"
-    cent7.vm.provision "shell", inline: "echo export PATH=$PATH:/usr/local/bin >> /root/.bashrc"
-    cent7.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle install" vagrant'
-    cent7.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle update" vagrant'
+    cent.vm.provision "shell", inline: "yum install -y rubygems"
+    cent.vm.provision "shell", inline: "gem install bundler"
+    cent.vm.provision "shell", inline: "echo export PATH=\\$PATH:/usr/local/bin >> /home/vagrant/.bashrc"
+    cent.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle install" vagrant'
+    cent.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle update" vagrant'
+
 
     # Git is required for cloning Puppet module deps in `rake test`
-    cent7.vm.provision "shell", inline: "yum install -y git"
+    cent.vm.provision "shell", inline: "yum install -y git"
 
     # Install Docker for Docker-based Beaker tests
-    cent7.vm.provision "shell", inline: "tee /etc/yum.repos.d/docker.repo <<-'EOF'
+    cent.vm.provision "shell", inline: "tee /etc/yum.repos.d/docker.repo <<-'EOF'
 [dockerrepo]
 name=Docker Repository
 baseurl=https://yum.dockerproject.org/repo/main/centos/$releasever/
@@ -72,10 +91,9 @@ gpgcheck=1
 gpgkey=https://yum.dockerproject.org/gpg
 EOF
 "
-    cent7.vm.provision "shell", inline: "yum install -y docker-engine"
-    cent7.vm.provision "shell", inline: "usermod -a -G docker vagrant"
-    cent7.vm.provision "shell", inline: "systemctl start docker"
-    cent7.vm.provision "shell", inline: "systemctl enable docker"
+    cent.vm.provision "shell", inline: "yum install -y docker-engine"
+    cent.vm.provision "shell", inline: "usermod -a -G docker vagrant"
+    cent.vm.provision "shell", inline: "systemctl start docker"
+    cent.vm.provision "shell", inline: "systemctl enable docker"
   end
-
 end
