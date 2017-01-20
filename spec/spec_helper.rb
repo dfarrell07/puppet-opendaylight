@@ -197,38 +197,6 @@ def log_level_tests(options = {})
   end
 end
 
-# Shared tests that specialize in testing enabling L3 via ODL OVSDB
-def enable_l3_tests(options = {})
-  # Extract params
-  # NB: This default value should be the same as one in opendaylight::params
-  # TODO: Remove this possible source of bugs^^
-  enable_l3 = options.fetch(:enable_l3, 'no')
-
-  if [true, 'yes'].include? enable_l3
-    # Confirm ODL OVSDB L3 is enabled
-    it {
-      should contain_file('custom.properties').with(
-        'ensure'      => 'file',
-        'path'        => '/opt/opendaylight/etc/custom.properties',
-        'owner'   => 'odl',
-        'group'   => 'odl',
-        'content'     => /^ovsdb.l3.fwd.enabled=yes\novsdb.l3.arp.responder.disabled=no/
-      )
-    }
-  elsif [false, 'no'].include? enable_l3
-    # Confirm ODL OVSDB L3 is disabled
-    it {
-      should contain_file('custom.properties').with(
-        'ensure'      => 'file',
-        'path'        => '/opt/opendaylight/etc/custom.properties',
-        'owner'   => 'odl',
-        'group'   => 'odl',
-        'content'     => /^ovsdb.l3.fwd.enabled=no/
-      )
-    }
-  end
-end
-
 def enable_ha_tests(options = {})
   # Extract params
   enable_ha = options.fetch(:enable_ha, false)
