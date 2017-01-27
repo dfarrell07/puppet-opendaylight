@@ -288,7 +288,7 @@ def enable_ha_validations(options = {})
   # HA_NODE_IPS size
   ha_node_count = ha_node_ips.size
 
-  if enable_ha
+  if (enable_ha) && (ha_node_count < 2)
     # Check for HA_NODE_COUNT < 2
     fail("Number of HA nodes less than 2: #{ha_node_count} and HA Enabled")
   end
