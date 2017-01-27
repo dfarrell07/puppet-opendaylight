@@ -206,21 +206,8 @@ def enable_ha_tests(options = {})
   ha_node_count = ha_node_ips.size
 
   if enable_ha
-    # Confirm ODL OVSDB HA is enabled
-    if ha_node_count >=2
-      # Check for HA_NODE_COUNT >= 2
-      it {
-        should contain_file('opendaylight/jolokia.xml').with(
-          'ensure'  => 'file',
-          'path'  => '/opt/opendaylight/deploy/jolokia.xml',
-          'owner' => 'odl',
-          'group' => 'odl'
-        )
-      }
-    else
-      # Check for HA_NODE_COUNT < 2
-      fail("Number of HA nodes less than 2: #{ha_node_count} and HA Enabled")
-    end
+    # Check for HA_NODE_COUNT < 2
+    fail("Number of HA nodes less than 2: #{ha_node_count} and HA Enabled")
   end
 end
 
