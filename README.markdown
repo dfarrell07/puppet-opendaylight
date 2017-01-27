@@ -38,7 +38,7 @@ Issue][8].
 
 The master branch installs OpenDaylight from the latest testing RPM repository
 by default. There are stable/<release> branches that install OpenDaylight
-releases and service releases, like Beryllium or Beryllium SR3.
+releases and service releases.
 
 ## Setup
 
@@ -59,40 +59,7 @@ Getting started with the OpenDaylight Puppet module is as simple as declaring
 the `::opendaylight` class.
 
 The [vagrant-opendaylight][11] project provides an easy way to experiment
-with [applying the ODL Puppet module][12] to CentOS 7, Fedora 22 and Fedora
-23 Vagrant boxes.
-
-```
-[~/vagrant-opendaylight]$ vagrant status
-Current machine states:
-
-cent7                     not created (libvirt)
-cent7_rpm_he_sr4          not created (libvirt)
-cent7_rpm_li_sr2          not created (libvirt)
-cent7_rpm_be              not created (libvirt)
-cent7_ansible             not created (libvirt)
-cent7_ansible_be          not created (libvirt)
-cent7_ansible_path        not created (libvirt)
-cent7_pup_rpm             not created (libvirt)
-cent7_pup_custom_logs     not created (libvirt)
-cent7_pup_tb              not created (libvirt)
-f22_rpm_li                not created (libvirt)
-f22_ansible               not created (libvirt)
-f22_pup_rpm               not created (libvirt)
-f23_rpm_li                not created (libvirt)
-f23_rpm_li_sr1            not created (libvirt)
-f23_rpm_li_sr2            not created (libvirt)
-f23_rpm_li_sr3            not created (libvirt)
-f23_rpm_be                not created (libvirt)
-f23_ansible               not created (libvirt)
-f23_pup_rpm               not created (libvirt)
-
-[~/vagrant-opendaylight]$ vagrant up cent7_pup_rpm
-# A CentOS 7 VM is created and configured using the ODL Puppet mod's defaults
-[~/vagrant-opendaylight]$ vagrant ssh cent7_pup_rpm
-[vagrant@localhost ~]$ sudo systemctl is-active opendaylight
-active
-```
+with [applying the ODL Puppet module][12] to CentOS and Fedora VMs.
 
 ## Usage
 
@@ -113,7 +80,7 @@ certainly need to pass some.
 
 ```puppet
 class { 'opendaylight':
-  extra_features => ['odl-ovsdb-plugin', 'odl-ovsdb-openstack'],
+  extra_features => ['odl-netvirt-openstack'],
 }
 ```
 
@@ -159,21 +126,21 @@ OpenDaylight is installed from.
 
 ```puppet
 class { 'opendaylight':
-  rpm_repo => 'opendaylight-40-release',
+  rpm_repo => 'opendaylight-50-release',
 }
 ```
 
 The naming convention follows the naming convention of the CentOS Community
 Build System, which is where upstream ODL hosts its RPMs. The
-`opendaylight-40-release` example above would install OpenDaylight Beryllium
-4.0.0 from the [nfv7-opendaylight-40-release][18] repo. Repo names ending in
+`opendaylight-50-release` example above would install OpenDaylight Boron
+5.0.0 from the [nfv7-opendaylight-50-release][18] repo. Repo names ending in
 `-release` will always contain well-tested, officially released versions of
 OpenDaylight. Repos ending in `-testing` contain frequent, but unstable and
 unofficial, releases. The ODL version given in repo names shows which major
-and minor version it is pinned to. The `opendaylight-40-release` repo will
-always provide OpenDaylight Beryllium 4.0, whereas `opendaylight-4-release`
-will provide the latest release with major version 4 (which could include
-Service Releases, like SR2 4.2).
+and minor version it is pinned to. The `opendaylight-50-release` repo will
+always provide OpenDaylight Boron 5.0, whereas `opendaylight-5-release`
+will provide the latest release with major version 5 (which could include
+Service Releases, like Boron SR3 5.3).
 
 For a full list of OpenDaylight releases and their CBS repos, see the
 [OpenDaylight Deployment wiki][19].
@@ -355,7 +322,7 @@ Required by: `enable_ha`, `ha_node_ips`
 Specifies the ODL tarball to use when installing via the tarball install
 method.
 
-Default: `'https://nexus.opendaylight.org/content/repositories/opendaylight.release/org/opendaylight/integration/distribution-karaf/0.3.2-Lithium-SR2/distribution-karaf-0.3.2-Lithium-SR2.tar.gz'`
+Default: `''`
 
 Valid options: A valid URL to an ODL tarball as a string.
 
@@ -381,7 +348,6 @@ Valid options: `transparent`, `learn`, `statless`
 
 ## Limitations
 
-- Tested on Fedora 22, 23, CentOS 7 and Ubuntu 14.04.
 - CentOS 7 is currently the most stable OS option.
 - The RPM install method is likely more reliable than the tarball install
   method.
@@ -399,34 +365,18 @@ See the [CHANGELOG][15] or our [git tags][16] for information about releases.
 See our [git commit history][17] for contributor information.
 
 [1]: https://travis-ci.org/dfarrell07/puppet-opendaylight
-
 [2]: https://gemnasium.com/dfarrell07/puppet-opendaylight
-
 [4]: https://travis-ci.org/dfarrell07/puppet-opendaylight.svg
-
 [5]: https://gemnasium.com/dfarrell07/puppet-opendaylight.svg
-
 [7]: http://www.opendaylight.org/
-
 [8]: https://github.com/dfarrell07/puppet-opendaylight/blob/master/CONTRIBUTING.markdown#issues
-
 [9]: https://github.com/dfarrell07/opendaylight-systemd/
-
 [10]: https://github.com/dfarrell07/puppet-opendaylight/blob/master/files/upstart.odl.conf
-
 [11]: https://github.com/dfarrell07/vagrant-opendaylight/
-
 [12]: https://github.com/dfarrell07/vagrant-opendaylight/tree/master/manifests
-
-[13]: https://github.com/dfarrell07/puppet-opendaylight/issues/63
-
 [14]: https://github.com/dfarrell07/puppet-opendaylight/blob/master/CONTRIBUTING.markdown
-
-[15]: https://github.com/dfarrell07/puppet-opendaylight/blob/master/CHANGELOG
-
+[15]: https://github.com/dfarrell07/puppet-opendaylight/blob/master/CHANGELOBoron G
 [16]: https://github.com/dfarrell07/puppet-opendaylight/releases
-
 [17]: https://github.com/dfarrell07/puppet-opendaylight/commits/master
-
-[18]&#x3A; <http://cbs.centos.org/repos/nfv7-opendaylight-40-release/x86_64/os/Packages/> OpenDaylight Beryllium CentOS CBS repo
-[19]&#x3A; <https://wiki.opendaylight.org/view/Deployment#RPM> OpenDaylight RPMs and their repos
+[18]: http://cbs.centos.org/repos/nfv7-opendaylight-50-release/x86_64/os/Packages/ "OpenDaylight Boron CentOS CBS repo"
+[19]: https://wiki.opendaylight.org/view/Deployment#RPM "OpenDaylight RPMs and their repos"

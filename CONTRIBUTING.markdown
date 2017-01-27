@@ -152,13 +152,13 @@ they don't do much more than checking that the code compiles to a given state.
 To verify that the Puppet module behaves as desired once applied to a real,
 running system, we use [Beaker][13].
 
-Beaker stands up virtual machines using Vagrant, applies the OpenDaylight
+Beaker stands up virtual machines or containers, applies the OpenDaylight
 Puppet module with various combinations of params and uses [Serverspec][14]
 to validate the resulting system state.
 
 Beaker depends on Vagrant ([Vagrant downloads page][17]) for managing VMs,
-which in turn depends on VirtualBox ([VirtualBox downloads page][18]) and
-the `kmod-VirtualBox` package.
+which in turn depends on a virtualization provider like [VirtualBox][18]) or
+[libvirt][20].
 
 To run our Beaker tests against the primary target OS (CentOS 7) using the
 recommended RPM-based install method, use:
@@ -216,39 +216,22 @@ matrix of supported Ruby and Puppet versions at every commit. This currently
 results in >8500 automated tests per commit.
 
 [1]: https://github.com/dfarrell07/puppet-opendaylight/issues
-
 [2]: https://github.com/dfarrell07/puppet-opendaylight/pulls
-
 [3]: https://github.com/dfarrell07/puppet-opendaylight/labels/good-for-beginners
-
 [4]: https://github.com/dfarrell07/puppet-opendaylight/labels/prio%3Ahigh
-
 [5]: https://github.com/dfarrell07/puppet-opendaylight/labels/prio%3Anormal
-
 [6]: https://help.github.com/articles/closing-issues-via-commit-messages/
-
 [7]: http://chris.beams.io/posts/git-commit/
-
 [8]: http://cdn3.volusion.com/74gtv.tjme9/v/vspfiles/photos/Delicious%20Dozen-1.jpg
-
 [9]: http://bundler.io/
-
 [10]: http://puppet-lint.com/
-
 [11]: https://github.com/gds-operations/puppet-syntax
-
 [12]: https://github.com/puppet-community/metadata-json-lint
-
 [13]: https://github.com/puppetlabs/beaker
-
 [14]: http://serverspec.org/resource_types.html
-
 [15]: https://github.com/puppetlabs/beaker/wiki/How-to-Write-a-Beaker-Test-for-a-Module#typical-workflow
-
 [16]: https://travis-ci.org/dfarrell07/puppet-opendaylight
-
 [17]: https://www.vagrantup.com/downloads.html
-
 [18]: www.virtualbox.org/wiki/Linux_Downloads
-
 [19]: http://webchat.freenode.net/?channels=opendaylight-integration
+[20]: https://github.com/vagrant-libvirt/vagrant-libvirt
