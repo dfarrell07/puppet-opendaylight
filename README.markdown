@@ -328,7 +328,7 @@ Valid options: The boolean values `true` and `false`.
 
 Requires: `ha_node_ips`, `ha_node_index`
 
-The ODL OVSDB Clustering and Jolokia XML for HA are configured and enabled.
+The ODL OVSDB Clustering XML for HA are configured and enabled.
 
 ##### `ha_node_ips`
 

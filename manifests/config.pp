@@ -45,16 +45,6 @@ class opendaylight::config {
   $ha_node_count = count($::opendaylight::ha_node_ips)
   if $::opendaylight::enable_ha {
     if $ha_node_count >= 2 {
-      # Configuration Jolokia XML for HA
-      file { 'opendaylight/jolokia.xml':
-        ensure => file,
-        path   => '/opt/opendaylight/deploy/jolokia.xml',
-        # Set user:group owners
-        owner  => 'odl',
-        group  => 'odl',
-        source => 'puppet:///modules/opendaylight/jolokia.xml',
-      }
-
       # Configure ODL OSVDB Clustering
       $ha_node_ip_str = join($::opendaylight::ha_node_ips, ' ')
       exec { 'Configure ODL OVSDB Clustering':
