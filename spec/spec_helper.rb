@@ -439,3 +439,35 @@ def enable_sg_tests(sg_mode='stateful', os_release)
     }
   end
 end
+
+# Shared tests that specialize in testing VPP routing node config
+def vpp_routing_node_tests(options = {})
+  # Extract params
+  # NB: This default list should be the same as the one in opendaylight::params
+  # TODO: Remove this possible source of bugs^^
+  routing_node = options.fetch(:routing_node, '')
+
+  if routing_node.empty?
+    it { should_not contain_file('org.opendaylight.groupbasedpolicy.neutron.vpp.mapper.cfg') }
+    it { should_not contain_file_line('routing-node') }
+  else
+    # Confirm properties of Karaf config file
+    # NB: These hashes don't work with Ruby 1.8.7, but we
+    #   don't support 1.8.7 so that's okay. See issue #36.
+    it {
+      should contain_file('org.opendaylight.groupbasedpolicy.neutron.vpp.mapper.cfg').with(
+        'ensure'      => 'file',
+        'path'        => '/opt/opendaylight/etc/org.opendaylight.groupbasedpolicy.neutron.vpp.mapper.cfg',
+        'owner'   => 'odl',
+        'group'   => 'odl',
+      )
+    }
+    it {
+      should contain_file_line('routing-node').with(
+        'path'  => '/opt/opendaylight/etc/org.opendaylight.groupbasedpolicy.neutron.vpp.mapper.cfg',
+        'line'  => "routing-node=#{routing_node}",
+        'match' => '^routing-node=.*$',
+      )
+    }
+  end
+end

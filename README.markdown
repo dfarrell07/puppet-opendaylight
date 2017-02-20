@@ -379,6 +379,15 @@ Default: `stateful`
 
 Valid options: `transparent`, `learn`, `statless`
 
+##### `vpp_routing_node`
+
+Specifies the routing node for VPP deployment. A non-empty string will create config file
+org.opendaylight.groupbasedpolicy.neutron.vpp.mapper.cfg with routing-node set.
+
+Default: `''`
+
+Valid options: A valid host name to a VPP node handling routing.
+
 ## Limitations
 
 - Tested on Fedora 22, 23, CentOS 7 and Ubuntu 14.04.

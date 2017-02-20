@@ -741,4 +741,52 @@ describe 'opendaylight' do
       enable_sg_tests('transparent', '7.2.1511')
     end
   end
+
+  # VPP routing node config tests
+  describe 'VPP routing node tests' do
+    # Non-OS-type tests assume CentOS 7
+    #   See issue #43 for reasoning:
+    #   https://github.com/dfarrell07/puppet-opendaylight/issues/43#issue-57343159
+    osfamily = 'RedHat'
+    operatingsystem = 'CentOS'
+    operatingsystemmajrelease = '7'
+    context 'using default - no routing node' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{ }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking routing-node config
+      # Note that this function is defined in spec_helper
+      vpp_routing_node_tests
+    end
+
+    context 'using node name for routing node' do
+      let(:facts) {{
+        :osfamily => osfamily,
+        :operatingsystem => operatingsystem,
+        :operatingsystemmajrelease => operatingsystemmajrelease,
+      }}
+
+      let(:params) {{
+        :vpp_routing_node => 'test-node-1',
+      }}
+
+      # Run shared tests applicable to all supported OSs
+      # Note that this function is defined in spec_helper
+      generic_tests
+
+      # Run test that specialize in checking routing-node config
+      # Note that this function is defined in spec_helper
+      vpp_routing_node_tests(routing_node: 'test-node-1')
+    end
+  end
+
 end

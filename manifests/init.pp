@@ -34,6 +34,8 @@
 #   Index of ha_node_ips for this node.
 # [*security_group_mode*]
 #   Sets the mode to use for security groups (stateful, learn, stateless, transparent)
+# [*vpp_routing_node*]
+#   Sets routing node for VPP deployments. Defaults to ''.
 #
 class opendaylight (
   $default_features    = $::opendaylight::params::default_features,
@@ -49,6 +51,7 @@ class opendaylight (
   $ha_node_ips         = $::opendaylight::params::ha_node_ips,
   $ha_node_index       = $::opendaylight::params::ha_node_index,
   $security_group_mode = $::opendaylight::params::security_group_mode,
+  $vpp_routing_node    = $::opendaylight::params::vpp_routing_node,
 ) inherits ::opendaylight::params {
 
   # Validate OS family
