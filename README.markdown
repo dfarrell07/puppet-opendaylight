@@ -377,7 +377,7 @@ Specifies the mode to use for security groups.
 
 Default: `stateful`
 
-Valid options: `transparent`, `learn`, `statless`
+Valid options: `transparent`, `learn`, `stateless`
 
 ##### `vpp_routing_node`
 
@@ -387,6 +387,14 @@ org.opendaylight.groupbasedpolicy.neutron.vpp.mapper.cfg with routing-node set.
 Default: `''`
 
 Valid options: A valid host name to a VPP node handling routing.
+
+##### `java_opts`
+
+Specifies the Java options to run ODL with as a string.
+
+Default: `'-Djava.net.preferIPv4Stack=true'`
+
+Valid options: A string of valid Java options.
 
 ## Limitations
 

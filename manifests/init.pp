@@ -36,6 +36,8 @@
 #   Sets the mode to use for security groups (stateful, learn, stateless, transparent)
 # [*vpp_routing_node*]
 #   Sets routing node for VPP deployments. Defaults to ''.
+# [*java_opts*]
+#   Sets Java options for ODL in a string format. Defaults to '-Djava.net.preferIPv4Stack=true'.
 #
 class opendaylight (
   $default_features    = $::opendaylight::params::default_features,
@@ -52,6 +54,7 @@ class opendaylight (
   $ha_node_index       = $::opendaylight::params::ha_node_index,
   $security_group_mode = $::opendaylight::params::security_group_mode,
   $vpp_routing_node    = $::opendaylight::params::vpp_routing_node,
+  $java_opts           = $::opendaylight::params::java_opts,
 ) inherits ::opendaylight::params {
 
   # Validate OS family
