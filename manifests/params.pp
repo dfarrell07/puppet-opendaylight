@@ -22,4 +22,5 @@ class opendaylight::params {
   $ha_node_index = 0
   $security_group_mode = 'stateful'
   $vpp_routing_node = ''
+  $java_opts = '-Djava.net.preferIPv4Stack=true'
 }

@@ -29,11 +29,12 @@ class opendaylight::install {
       require => Yumrepo[$opendaylight::rpm_repo],
     }
     ->
-    # Configure the systemd file to force ipv4 binds (instead of ipv6)
-    file_line { 'odl_start_ipv4':
+    # Configure the systemd file with Java options
+    file_line { 'java_options_systemd':
       ensure => present,
       path   => '/usr/lib/systemd/system/opendaylight.service',
-      line   => 'Environment=_JAVA_OPTIONS=\'-Djava.net.preferIPv4Stack=true\'',
+      line   => "Environment=_JAVA_OPTIONS=\'${opendaylight::java_opts}\'",
+      match  => '^Environment.*',
       after  => 'ExecStart=/opt/opendaylight/bin/start',
     }
     ->

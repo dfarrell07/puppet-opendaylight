@@ -347,6 +347,7 @@ end
 def rpm_install_tests(options = {})
   # Extract params
   rpm_repo = options.fetch(:rpm_repo, 'opendaylight-5-testing')
+  java_opts = options.fetch(:java_opts, '-Djava.net.preferIPv4Stack=true')
 
   # Default to CentOS 7 Yum repo URL
 
@@ -376,10 +377,10 @@ def rpm_install_tests(options = {})
   }
 
   it {
-    should contain_file_line('odl_start_ipv4').with(
+    should contain_file_line('java_options_systemd').with(
       'ensure' => 'present',
       'path' => '/usr/lib/systemd/system/opendaylight.service',
-      'line' => 'Environment=_JAVA_OPTIONS=\'-Djava.net.preferIPv4Stack=true\'',
+      'line' => "Environment=_JAVA_OPTIONS=\'#{java_opts}\'",
       'after' => 'ExecStart=/opt/opendaylight/bin/start',
     )
   }
