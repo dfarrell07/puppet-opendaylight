@@ -82,6 +82,21 @@ task :cent_5rel_dock do
   sh "RS_SET=centos-7-docker INSTALL_METHOD=rpm RPM_REPO='opendaylight-5-release' bundle exec rake beaker"
 end
 
+# Ubuntu VMs
+
+desc "Beaker tests against Ubuntu 16.04 VM with Boron release Deb"
+task :ubuntu_5rel_vm do
+  sh "RS_SET=ubuntu-16 INSTALL_METHOD=deb DEB_REPO='ppa:odl-team/boron' bundle exec rake beaker"
+end
+
+# Ubuntu Containers
+
+desc "Beaker tests against Ubuntu 16.04 Container with Boron release Deb"
+task :ubuntu_5rel_dock do
+  sh "RS_SET=ubuntu-16-docker INSTALL_METHOD=deb DEB_REPO='ppa:odl-team/boron' bundle exec rake beaker"
+end
+
+
 # Multi-test helpers
 
 desc "Run syntax, lint, and spec tests."
@@ -103,6 +118,7 @@ desc "All tests, use VMs for Beaker tests"
 task :acceptance_vm => [
   :test,
   :cent_5rel_vm,
+  :ubuntu_5rel_vm,
   :cent_5test_vm,
   :cent_6test_vm,
 ]
@@ -111,6 +127,7 @@ desc "All tests, use containers for Beaker tests"
 task :acceptance_dock => [
   :test,
   :cent_5rel_dock,
+  :ubuntu_5rel_dock,
   :cent_5test_dock,
   :cent_6test_dock,
 ]

@@ -1,0 +1,12 @@
+---
+HOSTS:
+  ubuntu-16:
+    roles:
+      - master
+    platform: ubuntu-1604-x86_64
+    box:  puphpet/ubuntu1604-x64
+    box_url: https://atlas.hashicorp.com/puphpet/boxes/ubuntu1604-x64
+    hypervisor: vagrant
+CONFIG:
+  log_level: verbose
+  type: foss
