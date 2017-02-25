@@ -13,12 +13,12 @@ describe 'opendaylight class' do
     install_odl
 
     # Run checks specific to install type, via env var passed from Rakefile
-    if ENV['INSTALL_METHOD'] == 'tarball'
-      # Call specialized helper fn for tarball-type install validations
-      tarball_validations
-    else
+    if :osfamily == 'RedHat'
       # Call specialized helper fn for RPM-type install validations
       rpm_validations
+    elsif :osfamily == 'Debian'
+      # Call specialized helper fn for Deb-type install validations
+      deb_validations
     end
 
     # Use helper fn to run generic validations

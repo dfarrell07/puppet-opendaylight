@@ -129,37 +129,32 @@ describe 'opendaylight' do
     describe 'OS family Debian' do
       osfamily = 'Debian'
 
-      # All tests for Ubuntu 14.04
+      # All tests for Ubuntu 16.04
       describe 'Ubuntu' do
         operatingsystem = 'Ubuntu'
 
         # All tests for supported versions of Ubuntu
-        ['14.04'].each do |operatingsystemmajrelease|
-          context "#{operatingsystemmajrelease}" do
+        ['16.04'].each do |operatingsystemrelease|
+          context "#{operatingsystemrelease}" do
             let(:facts) {{
               :osfamily => osfamily,
               :operatingsystem => operatingsystem,
-              :operatingsystemmajrelease => operatingsystemmajrelease,
-              # TODO: Do more elegantly. Java mod uses codenames to ID version.
-              :lsbdistcodename => 'trusty',
-              :architecture => 'x86_64',
+              :operatingsystemrelease => operatingsystemrelease,
+              :lsbdistid => operatingsystem,
+              :lsbdistrelease => operatingsystemrelease,
+              :lsbdistcodename => 'xenial',
+              :puppetversion => '4.9.0',
               :path => ['/usr/local/bin', '/usr/bin', '/bin'],
-            }}
-
-            # NB: Only tarball installs are supported for Debian family OSs
-            let(:params) {{
-              :install_method => 'tarball',
             }}
 
             # Run shared tests applicable to all supported OSs
             # Note that this function is defined in spec_helper
             generic_tests
 
-            # Run test that specialize in checking tarball-based installs
-            # NB: Only testing defaults here, specialized tarball tests elsewhere
-            # Passing osfamily required to do upstart vs systemd (default) checks
+            # Run test that specialize in checking deb-based installs
+            # NB: Passing osfamily required to do upstart vs systemd (default) checks
             # Note that this function is defined in spec_helper
-            tarball_install_tests(osfamily: osfamily)
+            deb_install_tests(osfamily: osfamily)
 
             # Run test that specialize in checking Karaf feature installs
             # NB: Only testing defaults here, specialized Karaf tests elsewhere
@@ -184,16 +179,20 @@ describe 'opendaylight' do
         end
 
         # All tests for unsupported versions of Ubuntu
-        ['12.04', '15.10'].each do |operatingsystemmajrelease|
-          context "#{operatingsystemmajrelease}" do
+        ['12.04', '14.04', '15.10'].each do |operatingsystemrelease|
+          context "#{operatingsystemrelease}" do
             let(:facts) {{
               :osfamily => osfamily,
               :operatingsystem => operatingsystem,
-              :operatingsystemmajrelease => operatingsystemmajrelease,
+              :operatingsystemrelease => operatingsystemrelease,
+              :lsbdistid => operatingsystem,
+              :lsbdistrelease => operatingsystemrelease,
+              :lsbdistcodename => 'xenial',
+              :puppetversion => '4.9.0',
             }}
             # Run shared tests applicable to all unsupported OSs
             # Note that this function is defined in spec_helper
-            expected_msg = "Unsupported OS: #{operatingsystem} #{operatingsystemmajrelease}"
+            expected_msg = "Unsupported OS: #{operatingsystem} #{operatingsystemrelease}"
             unsupported_os_tests(expected_msg: expected_msg)
           end
         end
@@ -504,25 +503,22 @@ describe 'opendaylight' do
 
   # All install method tests
   describe 'install method tests' do
-    # Non-OS-type tests assume CentOS 7
-    #   See issue #43 for reasoning:
-    #   https://github.com/dfarrell07/puppet-opendaylight/issues/43#issue-57343159
-    osfamily = 'RedHat'
-    operatingsystem = 'CentOS'
-    operatingsystemrelease = '7.0'
-    operatingsystemmajrelease = '7'
 
     # All tests for RPM install method
     describe 'RPM' do
+      # Non-OS-type tests assume CentOS 7
+      #   See issue #43 for reasoning:
+      #   https://github.com/dfarrell07/puppet-opendaylight/issues/43#issue-57343159
+      osfamily = 'RedHat'
+      operatingsystem = 'CentOS'
+      operatingsystemrelease = '7.0'
+      operatingsystemmajrelease = '7'
+
       context 'installing default RPM' do
         let(:facts) {{
           :osfamily => osfamily,
           :operatingsystem => operatingsystem,
           :operatingsystemmajrelease => operatingsystemmajrelease,
-        }}
-
-        let(:params) {{
-          :install_method => 'rpm',
         }}
 
         # Run shared tests applicable to all supported OSs
@@ -543,7 +539,6 @@ describe 'opendaylight' do
         }}
 
         let(:params) {{
-          :install_method => 'rpm',
           :rpm_repo => rpm_repo,
         }}
 
@@ -557,116 +552,66 @@ describe 'opendaylight' do
       end
     end
 
-    # All tests for tarball install method
-    describe 'tarball' do
-      describe 'using default tarball_url' do
-        context 'using default unitfile_url' do
-          let(:facts) {{
-            :osfamily => osfamily,
-            :operatingsystem => operatingsystem,
-            :operatingsystemrelease => operatingsystemrelease,
-            :operatingsystemmajrelease => operatingsystemmajrelease,
-            :architecture => 'x86_64',
-            :path => ['/usr/local/bin', '/usr/bin', '/bin'],
-          }}
+    # All tests for Deb install method
+    describe 'Deb' do
+      osfamily = 'Debian'
+      operatingsystem = 'Ubuntu'
+      operatingsystemrelease = '16.04'
+      operatingsystemmajrelease = '16'
+      lsbdistcodename = 'xenial'
+      
+      context 'installing Deb' do
+        let(:facts) {{
+          :osfamily => osfamily,
+          :operatingsystem => operatingsystem,
+          :operatingsystemrelease => operatingsystemrelease,
+          :operatingsystemmajrelease => operatingsystemmajrelease,
+          :lsbdistid => operatingsystem,
+          :lsbdistrelease => operatingsystemrelease,
+          :lsbmajdistrelease => operatingsystemmajrelease,
+          :lsbdistcodename => lsbdistcodename,
+          :puppetversion => Puppet.version,
+        }}
 
-          let(:params) {{
-            :install_method => 'tarball',
-          }}
+        # Run shared tests applicable to all supported OSs
+        # Note that this function is defined in spec_helper
+        generic_tests
 
-          # Run shared tests applicable to all supported OSs
-          # Note that this function is defined in spec_helper
-          generic_tests
-
-          # Run test that specialize in checking tarball-based installs
-          # Note that this function is defined in spec_helper
-          tarball_install_tests
-        end
-
-        context 'overriding default unitfile_url' do
-          # Doesn't matter if this is valid, just that it honors what we pass
-          unitfile_url = 'fake_unitfile'
-          let(:facts) {{
-            :osfamily => osfamily,
-            :operatingsystem => operatingsystem,
-            :operatingsystemrelease => operatingsystemrelease,
-            :operatingsystemmajrelease => operatingsystemmajrelease,
-            :architecture => 'x86_64',
-            :path => ['/usr/local/bin', '/usr/bin', '/bin'],
-          }}
-
-          let(:params) {{
-            :install_method => 'tarball',
-            :unitfile_url => unitfile_url,
-          }}
-
-          # Run shared tests applicable to all supported OSs
-          # Note that this function is defined in spec_helper
-          generic_tests
-
-          # Run test that specialize in checking tarball-based installs
-          # Note that this function is defined in spec_helper
-          tarball_install_tests(unitfile_url: unitfile_url)
-        end
+        # Run test that specialize in checking RPM-based installs
+        # Note that this function is defined in spec_helper
+        deb_install_tests
       end
 
-      describe 'overriding default tarball_url' do
-        # Doesn't matter if this is valid, just that it honors what we pass
-        tarball_url = 'fake_tarball'
-        context 'using default unitfile_url' do
-          unitfile_url = 'https://github.com/dfarrell07/opendaylight-systemd/archive/master/opendaylight-unitfile.tar.gz'
-          let(:facts) {{
-            :osfamily => osfamily,
-            :operatingsystem => operatingsystem,
-            :operatingsystemrelease => operatingsystemrelease,
-            :operatingsystemmajrelease => operatingsystemmajrelease,
-            :architecture => 'x86_64',
-            :path => ['/usr/local/bin', '/usr/bin', '/bin'],
-          }}
+      context 'installing Boron Deb' do
+        deb_repo = 'ppa:odl-team/boron'
+        let(:facts) {{
+          :osfamily => osfamily,
+          :operatingsystem => operatingsystem,
+          :operatingsystemrelease => operatingsystemrelease,
+          :operatingsystemmajrelease => operatingsystemmajrelease,
+          :lsbdistid => operatingsystem,
+          :lsbdistrelease => operatingsystemrelease,
+          :lsbmajdistrelease => operatingsystemmajrelease,
+          :lsbdistcodename => lsbdistcodename,
+          :puppetversion => Puppet.version,
+        }}
 
-          let(:params) {{
-            :install_method => 'tarball',
-            :tarball_url => tarball_url,
-          }}
+        let(:params) {{
+          :deb_repo => deb_repo,
+        }}
 
-          # Run shared tests applicable to all supported OSs
-          # Note that this function is defined in spec_helper
-          generic_tests
+        # Run shared tests applicable to all supported OSs
+        # Note that this function is defined in spec_helper
+        generic_tests
 
-          # Run test that specialize in checking tarball-based installs
-          # Note that this function is defined in spec_helper
-          tarball_install_tests(tarball_url: tarball_url)
-        end
-
-        context 'overriding default unitfile_url' do
-          # Doesn't matter if this is valid, just that it honors what we pass
-          unitfile_url = 'fake_unitfile'
-          let(:facts) {{
-            :osfamily => osfamily,
-            :operatingsystem => operatingsystem,
-            :operatingsystemrelease => operatingsystemrelease,
-            :operatingsystemmajrelease => operatingsystemmajrelease,
-            :architecture => 'x86_64',
-            :path => ['/usr/local/bin', '/usr/bin', '/bin'],
-          }}
-
-          let(:params) {{
-            :install_method => 'tarball',
-            :tarball_url => tarball_url,
-            :unitfile_url => unitfile_url,
-          }}
-
-          # Run shared tests applicable to all supported OSs
-          # Note that this function is defined in spec_helper
-          generic_tests
-
-          # Run test that specialize in checking tarball-based installs
-          # Note that this function is defined in spec_helper
-          tarball_install_tests(tarball_url: tarball_url, unitfile_url: unitfile_url)
-        end
+        # Run test that specialize in checking RPM-based installs
+        # Note that this function is defined in spec_helper
+        deb_install_tests(deb_repo: deb_repo)
       end
     end
+
   end
+
   # Security Group Tests
   describe 'security group tests' do
     # Non-OS-type tests assume CentOS 7

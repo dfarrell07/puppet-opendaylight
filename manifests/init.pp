@@ -12,17 +12,12 @@
 #   Port for ODL northbound REST interface to listen on.
 # [*odl_bind_ip *]
 #   IP for ODL northbound REST interface to bind to.
-# [*install_method *]
-#   How to install OpenDaylight. Current options are "rpm" and "tarball",
-#   default is RPM.
 # [*rpm_repo*]
 #   OpenDaylight CentOS CBS repo to install RPM from (opendaylight-4-testing,
 #   opendaylight-40-release, ...).
-# [*tarball_url*]
-#   If installing from a tarball, use this one. Defaults to latest ODL.
-# [*unitfile_url*]
-#   OpenDaylight .service file to use for tarball installs. Defaults to one
-#   used by ODL RPM.
+# [*deb_repo*]
+#   OpenDaylight Launchpad PPA repo to install .deb from (ppa:odl-team/boron,
+#   ppa:odl-team/carbon, ...).
 # [*log_levels*]
 #   Custom OpenDaylight logger verbosity configuration (TRACE, DEBUG, INFO, WARN, ERROR).
 # [*enable_ha*]
@@ -44,10 +39,8 @@ class opendaylight (
   $extra_features      = $::opendaylight::params::extra_features,
   $odl_rest_port       = $::opendaylight::params::odl_rest_port,
   $odl_bind_ip         = $::opendaylight::params::odl_bind_ip,
-  $install_method      = $::opendaylight::params::install_method,
   $rpm_repo            = $::opendaylight::params::rpm_repo,
-  $tarball_url         = $::opendaylight::params::tarball_url,
-  $unitfile_url        = $::opendaylight::params::unitfile_url,
+  $deb_repo            = $::opendaylight::params::deb_repo,
   $log_levels          = $::opendaylight::params::log_levels,
   $enable_ha           = $::opendaylight::params::enable_ha,
   $ha_node_ips         = $::opendaylight::params::ha_node_ips,
@@ -89,9 +82,9 @@ class opendaylight (
       }
     }
     ubuntu: {
-      if $::operatingsystemmajrelease != '14.04' {
-        # Only tested on 14.04
-        fail("Unsupported OS: ${::operatingsystem} ${::operatingsystemmajrelease}")
+      if $::operatingsystemrelease < '16.04' {
+        # Only tested on 16.04
+        fail("Unsupported OS: ${::operatingsystem} ${::operatingsystemrelease}")
       }
     }
     default: {

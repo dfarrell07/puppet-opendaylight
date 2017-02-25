@@ -7,6 +7,8 @@ unless ENV['BEAKER_provision'] == 'no'
     # Install Puppet
     if host.is_pe?
       install_pe
+    elsif host.name == "ubuntu-16-docker" || host.name == "ubuntu-16"
+      install_puppet_agent_on(host, puppet_collection: "pc1")
     else
       install_puppet
     end
@@ -28,10 +30,8 @@ RSpec.configure do |c|
     hosts.each do |host|
       # Install stdlib, a dependency of the odl mod
       on host, puppet('module', 'install', 'puppetlabs-stdlib'), { :acceptable_exit_codes => [0] }
-      # Install archive, a dependency of the odl mod use for tarball-type installs
-      on host, puppet('module', 'install', 'camptocamp-archive'), { :acceptable_exit_codes => [0] }
-      # Install Java Puppet mod, a dependency of the tarball install method
-      on host, puppet('module', 'install', 'puppetlabs-java'), { :acceptable_exit_codes => [0] }
+      # Install apt, a dependency of the deb install method
+      on host, puppet('module', 'install', 'puppetlabs-apt'), { :acceptable_exit_codes => [0] }
     end
   end
 end
@@ -50,8 +50,14 @@ def install_odl(options = {})
   # Changing the installed version of ODL via `puppet apply` is not supported
   # by puppet-odl, so it's not possible to vary these params in the same
   # Beaker test run. Do a different run passing different env vars.
-  install_method = ENV['INSTALL_METHOD']
   rpm_repo = ENV['RPM_REPO']
+  deb_repo = ENV['DEB_REPO']
+
+  if rpm_repo == ''
+    rpm_repo = 'none'
+  elsif deb_repo == ''
+    deb_repo = 'none'
+  end
 
   # NB: These param defaults should match the ones used by the opendaylight
   #   class, which are defined in opendaylight::params
@@ -70,8 +76,8 @@ def install_odl(options = {})
   it 'should work idempotently with no errors' do
     pp = <<-EOS
     class { 'opendaylight':
-      install_method => #{install_method},
-      rpm_repo => #{rpm_repo},
+      rpm_repo => '#{rpm_repo}',
+      deb_repo => '#{deb_repo}',
       default_features => #{default_features},
       extra_features => #{extra_features},
       odl_rest_port=> #{odl_rest_port},
@@ -107,10 +113,10 @@ def generic_validations()
   describe service('opendaylight') do
     it { should be_enabled }
     it { should be_enabled.with_level(3) }
-    it { should be_running }
+    it { should be_running.under('systemd') }
   end
 
-  # Creation handled by RPM, or Puppet during tarball installs
+  # Creation handled by RPM or Deb
   describe user('odl') do
     it { should exist }
     it { should belong_to_group 'odl' }
@@ -123,7 +129,7 @@ def generic_validations()
     it { should have_home_directory '/opt/opendaylight' }
   end
 
-  # Creation handled by RPM, or Puppet during tarball installs
+  # Creation handled by RPM or Deb
   describe group('odl') do
     it { should exist }
   end
@@ -175,21 +181,23 @@ def generic_validations()
     describe package('java-1.8.0-openjdk') do
       it { should be_installed }
     end
-  elsif ['ubuntu-1404', 'ubuntu-1404-docker'].include? ENV['RS_SET']
-    # Ubuntu-specific validations
 
-    # Verify ODL Upstart config file
-    describe file('/etc/init/opendaylight.conf') do
+  # Ubuntu 16.04 specific validation  
+  elsif ['ubuntu-16', 'ubuntu-16-docker'].include? ENV['RS_SET']
+
+    # Verify ODL systemd .service file
+    describe file('/lib/systemd/system/opendaylight.service') do
       it { should be_file }
       it { should be_owned_by 'root' }
       it { should be_grouped_into 'root' }
       it { should be_mode '644' }
     end
 
-    # Java 7 should be installed
-    describe package('openjdk-7-jdk') do
+    # Java 8 should be installed
+    describe package('openjdk-8-jre-headless') do
       it { should be_installed }
     end
+
   else
     fail("Unexpected RS_SET (host OS): #{ENV['RS_SET']}")
   end
@@ -308,19 +316,17 @@ def rpm_validations()
   end
 end
 
-# Shared function that handles validations specific to tarball-type installs
-def tarball_validations()
-  rpm_repo = ENV['RPM_REPO']
-
-  describe package('opendaylight') do
-    it { should_not be_installed }
+# Shared function that handles validations specific to Deb-type installs
+def deb_validations()
+  deb_repo = ENV['DEB_REPO']
+  # Check ppa
+  # Docs: http://serverspec.org/resource_types.html#ppa
+  describe ppa(deb_repo) do
+    it { should exist }
+    it { should be_enabled }
   end
 
-  # Repo checks break (not fail) when yum doesn't make sense (Ubuntu)
-  if ['centos-7', 'fedora-22', 'fedora-23', 'fedora-23-docker'].include? ENV['RS_SET']
-    describe yumrepo(rpm_repo) do
-      it { should_not exist }
-      it { should_not be_enabled }
-    end
+  describe package('opendaylight') do
+    it { should be_installed }
   end
 end

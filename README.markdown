@@ -12,8 +12,8 @@
   - [Beginning with `opendaylight`](#beginning-with-opendaylight)
 4. [Usage](#usage)
   - [Karaf Features](#karaf-features)
-  - [Install Method](#install-method)
   - [RPM Repo](#rpm-repo)
+  - [Deb Repo](#deb-repo)
   - [Ports](#ports)
   - [Log Verbosity](#log-verbosity)
   - [Enabling ODL OVSDB HA](#enabling-odl-ovsdb-ha)
@@ -29,16 +29,15 @@ Networking (SDN) controller][7].
 
 ## Module Description
 
-Deploys OpenDaylight to various OSs either via an RPM or directly from the
-ODL tarball release artifact.
+Deploys OpenDaylight to various OSs either via an RPM or a Deb.
 
 All OpenDaylight configuration should be handled through the ODL Puppet
 module's [params](#parameters). If you need a new knob, [please raise an
 Issue][8].
 
-The master branch installs OpenDaylight from the latest testing RPM repository
-by default. There are stable/<release> branches that install OpenDaylight
-releases and service releases, like Beryllium or Beryllium SR3.
+By default, the master branch installs OpenDaylight from the latest testing RPM repository
+or from the latest stable Deb repository depending on the OS. There are stable/<release>
+branches that install OpenDaylight releases and service releases, like Beryllium or Beryllium SR3.
 
 ## Setup
 
@@ -47,11 +46,10 @@ releases and service releases, like Beryllium or Beryllium SR3.
 - Installs Java, which is required by ODL.
 - Creates `odl:odl` user:group if they don't already exist.
 - Installs [OpenDaylight][7].
-- Installs a [systemd unitfile][9] or [Upstart config file][10] for
-  OpenDaylight.
+- Installs a [systemd unitfile][9] for OpenDaylight.
 - Manipulates OpenDaylight's configuration files according to the params
   passed to the `::opendaylight` class.
-- Starts the `opendaylight` systemd or Upstart service.
+- Starts the `opendaylight` systemd service.
 
 ### Beginning with `opendaylight`
 
@@ -59,33 +57,48 @@ Getting started with the OpenDaylight Puppet module is as simple as declaring
 the `::opendaylight` class.
 
 The [vagrant-opendaylight][11] project provides an easy way to experiment
-with [applying the ODL Puppet module][12] to CentOS 7, Fedora 22 and Fedora
-23 Vagrant boxes.
+with [applying the ODL Puppet module][12] to CentOS 7, Fedora 22, Fedora
+23 and Ubuntu 16.04 Vagrant boxes.
 
 ```
 [~/vagrant-opendaylight]$ vagrant status
 Current machine states:
 
-cent7                     not created (libvirt)
-cent7_rpm_he_sr4          not created (libvirt)
-cent7_rpm_li_sr2          not created (libvirt)
-cent7_rpm_be              not created (libvirt)
-cent7_ansible             not created (libvirt)
-cent7_ansible_be          not created (libvirt)
-cent7_ansible_path        not created (libvirt)
-cent7_pup_rpm             not created (libvirt)
-cent7_pup_custom_logs     not created (libvirt)
-cent7_pup_tb              not created (libvirt)
-f22_rpm_li                not created (libvirt)
-f22_ansible               not created (libvirt)
-f22_pup_rpm               not created (libvirt)
-f23_rpm_li                not created (libvirt)
-f23_rpm_li_sr1            not created (libvirt)
-f23_rpm_li_sr2            not created (libvirt)
-f23_rpm_li_sr3            not created (libvirt)
-f23_rpm_be                not created (libvirt)
-f23_ansible               not created (libvirt)
-f23_pup_rpm               not created (libvirt)
+cent7_li_sr4              not created (virtualbox)
+cent7_be                  not created (virtualbox)
+cent7_be_sr1              not created (virtualbox)
+cent7_be_sr2              not created (virtualbox)
+cent7_rpm_he_sr4          not created (virtualbox)
+cent7_rpm_li_sr2          not created (virtualbox)
+cent7_rpm_li_sr3          not created (virtualbox)
+cent7_rpm_be              not created (virtualbox)
+cent7_rpm_be_sr1          not created (virtualbox)
+cent7_rpm_be_sr2          not created (virtualbox)
+cent7_rpm_ve_latest       not created (virtualbox)
+cent7_ansible             not created (virtualbox)
+cent7_ansible_latest      not created (virtualbox)
+cent7_ansible_path        not created (virtualbox)
+cent7_pup_rpm             not created (virtualbox)
+cent7_pup_custom_logs     not created (virtualbox)
+cent7_pup_enable_l3       not created (virtualbox)
+cent7_pup_tb              not created (virtualbox)
+f22_rpm_li                not created (virtualbox)
+f22_ansible               not created (virtualbox)
+f22_pup_rpm               not created (virtualbox)
+f23_rpm_li                not created (virtualbox)
+f23_rpm_li_sr1            not created (virtualbox)
+f23_rpm_li_sr2            not created (virtualbox)
+f23_rpm_li_sr3            not created (virtualbox)
+f23_rpm_be                not created (virtualbox)
+f23_rpm_be_rel            not created (virtualbox)
+f23_rpm_be_latest         not created (virtualbox)
+f23_ansible               not created (virtualbox)
+f23_pup_rpm               not created (virtualbox)
+debian8_ansible_repo      not created (virtualbox)
+debian8_ansible_path      not created (virtualbox)
+ubuntu16_ansible_repo     not created (virtualbox)
+ubuntu16_ansible_path     not created (virtualbox)
+ubuntu16_pup_deb          not created (virtualbox)
 
 [~/vagrant-opendaylight]$ vagrant up cent7_pup_rpm
 # A CentOS 7 VM is created and configured using the ODL Puppet mod's defaults
@@ -128,30 +141,6 @@ class { 'opendaylight':
 }
 ```
 
-### Install Method
-
-The `install_method` param, and the associated `tarball_url` and `unitfile_url`
-params, are intended for use by developers who need to install a custom-built
-version of OpenDaylight, or for automated build processes that need to consume
-a tarball build artifact.
-
-It's recommended that most people use the default RPM-based install.
-
-If you do need to install from a tarball, simply pass `tarball` as the value
-for `install_method` and optionally pass the URL to your tarball via the
-`tarball_url` param. The default value for `tarball_url` points at
-OpenDaylight's latest release. The `unitfile_url` param points at the
-OpenDaylight systemd .service file used by the RPM and should (very likely)
-not need to be overridden.
-
-```puppet
-class { 'opendaylight':
-  install_method => 'tarball',
-  tarball_url    => '<URL to your custom tarball>',
-  unitfile_url   => '<URL to your custom unitfile>',
-}
-```
-
 ### RPM Repo
 
 The `rpm_repo` param can be used to configure which RPM repository
@@ -178,7 +167,26 @@ Service Releases, like SR2 4.2).
 For a full list of OpenDaylight releases and their CBS repos, see the
 [OpenDaylight Deployment wiki][19].
 
-This is only read when `install_method` is `rpm`.
+This is only read for RedHat based operating systems. For Debian based OSs,
+this values is `none`.
+
+### Deb Repo
+
+The `deb_repo` param can be used to configure which Deb repository
+OpenDaylight is installed from.
+
+```puppet
+class { 'opendaylight':
+  deb_repo => 'ppa:odl-team/boron',
+}
+```
+
+The naming convention is same as the naming convention of Launchpad PPA's,
+which is where ODL .debs are hosted. The `ppa:odl-team/boron` example above
+would install OpenDaylight Boron realease from the [odl-team's boron][20] repo.
+
+This is only read for Debian based operating systems. For RedHat based OSs,
+this values is `none`.
 
 ### Ports
 
@@ -232,7 +240,7 @@ class { 'opendaylight':
 #### Private classes
 
 - `::opendaylight::params`: Contains default `opendaylight` class param values.
-- `::opendaylight::install`: Installs ODL from an RPM or tarball.
+- `::opendaylight::install`: Installs ODL from an RPM or a Deb.
 - `::opendaylight::config`: Manages ODL config, including Karaf features and
   REST port.
 - `::opendaylight::service`: Starts the OpenDaylight service.
@@ -261,17 +269,6 @@ Default: `[]`
 
 Valid options: A list of Karaf feature names as strings.
 
-##### `install_method`
-
-Specifies the install method by which to install OpenDaylight.
-
-The RPM install method is less complex, more frequently consumed and
-recommended.
-
-Default: `'rpm'`
-
-Valid options: The strings `'tarball'` or `'rpm'`.
-
 ##### `odl_rest_port`
 
 Specifies the port for the ODL northbound REST interface to listen on.
@@ -279,6 +276,16 @@ Specifies the port for the ODL northbound REST interface to listen on.
 Default: `'8080'`
 
 Valid options: A valid port number as a string or integer.
+
+##### `rpm_repo`
+
+OpenDaylight CentOS CBS repo to install RPM from (opendaylight-4-testing,
+opendaylight-40-release, ...).
+
+##### `deb_repo`
+
+OpenDaylight Launchpad PPA repo to install .deb from (ppa:odl-team/boron,
+ppa:odl-team/carbon, ...).
 
 ##### `log_levels`
 
@@ -350,27 +357,6 @@ Valid options: Index of a member of the array `ha_node_ips`: `0`.
 
 Required by: `enable_ha`, `ha_node_ips`
 
-##### `tarball_url`
-
-Specifies the ODL tarball to use when installing via the tarball install
-method.
-
-Default: `'https://nexus.opendaylight.org/content/repositories/opendaylight.release/org/opendaylight/integration/distribution-karaf/0.3.2-Lithium-SR2/distribution-karaf-0.3.2-Lithium-SR2.tar.gz'`
-
-Valid options: A valid URL to an ODL tarball as a string.
-
-##### `unitfile_url`
-
-Specifies the ODL systemd .service file to use when installing via the tarball
-install method.
-
-It's very unlikely that you'll need to override this.
-
-Default: `'https://github.com/dfarrell07/opendaylight-systemd/archive/master/opendaylight-unitfile.tar.gz'`
-
-Valid options: A valid URL to an ODL systemd .service file (archived in a
-tarball) as a string.
-
 ##### `security_group_mode`
 
 Specifies the mode to use for security groups.
@@ -398,10 +384,8 @@ Valid options: A string of valid Java options.
 
 ## Limitations
 
-- Tested on Fedora 22, 23, CentOS 7 and Ubuntu 14.04.
+- Tested on Fedora 22, 23, CentOS 7 and Ubuntu 16.04.
 - CentOS 7 is currently the most stable OS option.
-- The RPM install method is likely more reliable than the tarball install
-  method.
 
 ## Development
 
@@ -445,5 +429,8 @@ See our [git commit history][17] for contributor information.
 
 [17]: https://github.com/dfarrell07/puppet-opendaylight/commits/master
 
-[18]&#x3A; <http://cbs.centos.org/repos/nfv7-opendaylight-40-release/x86_64/os/Packages/> OpenDaylight Beryllium CentOS CBS repo
-[19]&#x3A; <https://wiki.opendaylight.org/view/Deployment#RPM> OpenDaylight RPMs and their repos
+[18]: <http://cbs.centos.org/repos/nfv7-opendaylight-40-release/x86_64/os/Packages/> "OpenDaylight Beryllium CentOS CBS repo"
+
+[19]: <https://wiki.opendaylight.org/view/Deployment#RPM> "OpenDaylight RPMs and their repos"
+
+[20]: https://launchpad.net/~odl-team/+archive/ubuntu/boron
