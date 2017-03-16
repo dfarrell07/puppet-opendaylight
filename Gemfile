@@ -8,6 +8,7 @@ group :test do
   gem "metadata-json-lint"
   gem "travis"
   gem "travis-lint"
+  gem "rspec-puppet-facts", :require => false
 end
 
 group :local_only do

@@ -33,6 +33,10 @@
 #   Sets routing node for VPP deployments. Defaults to ''.
 # [*java_opts*]
 #   Sets Java options for ODL in a string format. Defaults to '-Djava.net.preferIPv4Stack=true'.
+# [*manage_repositories*]
+#   (Boolean) Should this module manage the apt or yum repositories for the
+#   package installation.
+#   Defaults to true
 #
 class opendaylight (
   $default_features    = $::opendaylight::params::default_features,
@@ -48,6 +52,7 @@ class opendaylight (
   $security_group_mode = $::opendaylight::params::security_group_mode,
   $vpp_routing_node    = $::opendaylight::params::vpp_routing_node,
   $java_opts           = $::opendaylight::params::java_opts,
+  $manage_repositories = $::opendaylight::params::manage_repositories,
 ) inherits ::opendaylight::params {
 
   # Validate OS family
