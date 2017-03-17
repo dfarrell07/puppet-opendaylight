@@ -1,4 +1,6 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
+require 'rspec-puppet-facts'
+include RspecPuppetFacts
 
 # Customize filters to ignore 3rd-party code
 # If the coverage report shows not-our-code results, add it here
