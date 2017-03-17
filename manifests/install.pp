@@ -36,10 +36,11 @@ class opendaylight::install {
       match  => '^Environment.*',
       after  => 'ExecStart=/opt/opendaylight/bin/start',
     }
-    ->
+    ~>
     exec {'reload_systemd_units':
-      command => 'systemctl daemon-reload',
-      path    => '/bin'
+      command     => 'systemctl daemon-reload',
+      path        => '/bin',
+      refreshonly => true,
     }
   }
 
