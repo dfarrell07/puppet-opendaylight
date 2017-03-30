@@ -99,8 +99,8 @@ class opendaylight (
   # Build full list of features to install
   $features = union($default_features, $extra_features)
 
-  class { '::opendaylight::install': } ->
-  class { '::opendaylight::config': } ~>
-  class { '::opendaylight::service': } ->
-  Class['::opendaylight']
+  class { '::opendaylight::install': }
+  -> class { '::opendaylight::config': }
+  ~> class { '::opendaylight::service': }
+  -> Class['::opendaylight']
 }

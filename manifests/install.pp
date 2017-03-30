@@ -25,8 +25,7 @@ class opendaylight::install {
       after   => 'ExecStart=/opt/opendaylight/bin/start',
       require => Package['opendaylight'],
     }
-    ~>
-    exec {'reload_systemd_units':
+    ~> exec {'reload_systemd_units':
       command     => 'systemctl daemon-reload',
       path        => '/bin',
       refreshonly => true,

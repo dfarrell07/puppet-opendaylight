@@ -84,8 +84,7 @@ class opendaylight::config {
       owner  => 'odl',
       group  => 'odl',
     }
-    ->
-    file { 'netvirt-aclservice-config.xml':
+    -> file { 'netvirt-aclservice-config.xml':
       ensure  => file,
       path    => '/opt/opendaylight/etc/opendaylight/datastore/initial/config/netvirt-aclservice-config.xml',
       owner   => 'odl',
