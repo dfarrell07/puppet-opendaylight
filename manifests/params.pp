@@ -12,7 +12,7 @@ class opendaylight::params {
   $extra_features = []
   $odl_rest_port = '8080'
   $odl_bind_ip = '0.0.0.0'
-  $rpm_repo = 'opendaylight-5-testing'
+  $rpm_repo = 'opendaylight-6-testing'
   $deb_repo = 'ppa:odl-team/boron'
   $log_levels = {}
   $enable_ha = false

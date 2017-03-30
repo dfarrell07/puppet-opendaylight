@@ -20,8 +20,8 @@ describe 'opendaylight::repos' do
     context "with defaults" do
       it { should contain_class('opendaylight::repos') }
       it {
-        should contain_yumrepo('opendaylight-5-testing').with(
-          :baseurl  => 'http://cbs.centos.org/repos/nfv7-opendaylight-5-testing/$basearch/os/',
+        should contain_yumrepo('opendaylight-6-testing').with(
+          :baseurl  => 'http://cbs.centos.org/repos/nfv7-opendaylight-6-testing/$basearch/os/',
           :enabled  => 1,
           :gpgcheck => 0,
         )
