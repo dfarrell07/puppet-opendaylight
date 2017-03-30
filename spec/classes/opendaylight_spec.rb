@@ -152,9 +152,8 @@ describe 'opendaylight' do
             generic_tests
 
             # Run test that specialize in checking deb-based installs
-            # NB: Passing osfamily required to do upstart vs systemd (default) checks
             # Note that this function is defined in spec_helper
-            deb_install_tests(osfamily: osfamily)
+            deb_install_tests
 
             # Run test that specialize in checking Karaf feature installs
             # NB: Only testing defaults here, specialized Karaf tests elsewhere
