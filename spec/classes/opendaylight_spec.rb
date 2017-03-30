@@ -11,7 +11,7 @@ describe 'opendaylight' do
         operatingsystem = 'Fedora'
 
         # All tests for supported versions of Fedora
-        ['22', '23'].each do |operatingsystemmajrelease|
+        ['24', '25'].each do |operatingsystemmajrelease|
           context "#{operatingsystemmajrelease}" do
             let(:facts) {{
               :osfamily => osfamily,
@@ -50,7 +50,7 @@ describe 'opendaylight' do
         end
 
         # All tests for unsupported versions of Fedora
-        ['21'].each do |operatingsystemmajrelease|
+        ['23'].each do |operatingsystemmajrelease|
           context "#{operatingsystemmajrelease}" do
             let(:facts) {{
               :osfamily => osfamily,

@@ -166,7 +166,7 @@ def generic_validations()
     it { should be_grouped_into 'odl' }
   end
 
-  if ['centos-7', 'centos-7-docker', 'fedora-22', 'fedora-23', 'fedora-23-docker'].include? ENV['RS_SET']
+  if ['centos-7', 'centos-7-docker'].include? ENV['RS_SET']
     # Validations for modern Red Hat family OSs
 
     # Verify ODL systemd .service file
