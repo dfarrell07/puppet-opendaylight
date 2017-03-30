@@ -33,6 +33,11 @@ Vagrant.configure(2) do |config|
     fedora.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle install" vagrant'
     fedora.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle update" vagrant'
 
+    # Install tox, used for managing tests
+    fedora.vm.provision "shell", inline: "dnf install -y python3-pip"
+    fedora.vm.provision "shell", inline: "pip3 install pip --upgrade"
+    fedora.vm.provision "shell", inline: "pip3 install tox"
+
     # Git is required for cloning Puppet module deps in `rake test`
     fedora.vm.provision "shell", inline: "dnf install -y git"
 
@@ -76,7 +81,6 @@ EOF
     cent.vm.provision "shell", inline: "echo export PATH=\\$PATH:/usr/local/bin >> /home/vagrant/.bashrc"
     cent.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle install" vagrant'
     cent.vm.provision "shell", inline: 'su -c "cd /home/vagrant/puppet-opendaylight; bundle update" vagrant'
-
 
     # Git is required for cloning Puppet module deps in `rake test`
     cent.vm.provision "shell", inline: "yum install -y git"
