@@ -19,7 +19,7 @@
 - [Deb Repo](#deb-repo)
 - [Ports](#ports)
 - [Log Verbosity](#log-verbosity)
-- [Enabling ODL OVSDB HA](#enabling-odl-ovsdb-ha)
+- [Enabling ODL HA](#enabling-odl-ha)
 
 5. [Reference ](#reference)
 6. [Limitations](#limitations)
@@ -60,15 +60,14 @@ branches that install OpenDaylight releases and service releases, like Beryllium
 Getting started with the OpenDaylight Puppet module is as simple as declaring
 the `::opendaylight` class.
 
-The [vagrant-opendaylight][11] project provides an easy way to experiment
-with [applying the ODL Puppet module][12] to CentOS 7, Fedora 22, Fedora
-23 and Ubuntu 16.04 Vagrant boxes.
+The [vagrant-opendaylight][11] project provides an easy way to experiment with
+[applying the ODL Puppet module][12] to VMs.
 
 ```
 # Provision a CentOS VM using puppet-opendaylight
 $ vagrant up cent7_pup_rpm
 $ vagrant ssh cent7_pup_rpm
-[vagrant@localhost ~]$ sudo systemctl is-active opendaylight
+$ sudo systemctl is-active opendaylight
 active
 ```
 
@@ -91,7 +90,7 @@ certainly need to pass some.
 
 ```puppet
 class { 'opendaylight':
-  extra_features => ['odl-ovsdb-plugin', 'odl-ovsdb-openstack'],
+  extra_features => ['odl-netvirt-openstack'],
 }
 ```
 
@@ -175,12 +174,12 @@ class { 'opendaylight':
 }
 ```
 
-### Enabling ODL OVSDB HA
+### Enabling ODL HA
 
-To enable ODL OVSDB HA, use the `enable_ha` flag. It's disabled by default.
+To enable ODL HA, use the `enable_ha` flag. It's disabled by default.
 
 When `enable_ha` is set to true the `ha_node_ips` should be populated with the
-IP addresses that ODL will listen on for each node in the OVSDB HA cluster and
+IP addresses that ODL will listen on for each node in the HA cluster and
 `ha_node_index` should be set with the index of the IP address from
 `ha_node_ips` for the particular node that puppet is configuring as part of the
 HA cluster.
@@ -292,7 +291,7 @@ The main log output file is `/opt/opendaylight/data/log/karaf.log`.
 
 ##### `enable_ha`
 
-Enable or disable ODL OVSDB High Availablity.
+Enable or disable ODL High Availablity.
 
 Default: `false`
 
@@ -300,7 +299,7 @@ Valid options: The boolean values `true` and `false`.
 
 Requires: `ha_node_ips`, `ha_node_index`
 
-The ODL OVSDB Clustering XML for HA are configured and enabled.
+The ODL Clustering XML for HA are configured and enabled.
 
 ##### `ha_node_ips`
 
@@ -349,8 +348,8 @@ Valid options: A string of valid Java options.
 
 ## Limitations
 
-- Tested on Fedora 22, 23, CentOS 7 and Ubuntu 16.04.
-- CentOS 7 is currently the most stable OS option.
+- Tested on CentOS 7 and Ubuntu 16.04.
+- Fedora is allowed but not well-tested, no Beaker coverage.
 
 ## Development
 
@@ -378,8 +377,6 @@ See our [git commit history][17] for contributor information.
 
 [9]: https://github.com/dfarrell07/opendaylight-systemd/
 
-[10]: https://github.com/dfarrell07/puppet-opendaylight/blob/master/files/upstart.odl.conf
-
 [11]: https://github.com/dfarrell07/vagrant-opendaylight/
 
 [12]: https://github.com/dfarrell07/vagrant-opendaylight/tree/master/manifests
@@ -396,6 +393,6 @@ See our [git commit history][17] for contributor information.
 
 [18]: http://cbs.centos.org/repos/nfv7-opendaylight-40-release/x86_64/os/Packages/ "OpenDaylight Beryllium CentOS CBS repo"
 
-[19]: https://wiki.opendaylight.org/view/Deployment#RPM "OpenDaylight RPMs and their repos"
+[18]: https://wiki.opendaylight.org/view/Deployment#RPM "OpenDaylight RPMs and their repos"
 
 [20]: https://launchpad.net/~odl-team/+archive/ubuntu/boron

@@ -65,7 +65,8 @@ of other key words][6]).
 
 ### IRC channel
 
-Feel free to join us at **#opendaylight-integration** on `chat.freenode.net`. You can also use web client for Freenode to join us at [webchat][19].
+Feel free to join us at **#opendaylight-integration** on `chat.freenode.net`.
+You can also use web client for Freenode to join us at [webchat][19].
 
 ## Patches
 
@@ -101,11 +102,11 @@ The testing tools have a number of dependencies. We use [Bundler][9] to make
 installing them easy.
 
 ```
-[~/puppet-opendaylight]$ sudo yum install -y rubygems ruby-devel gcc-c++ zlib-devel \
-                                             patch redhat-rpm-config make
-[~/puppet-opendaylight]$ gem install bundler
-[~/puppet-opendaylight]$ bundle install
-[~/puppet-opendaylight]$ bundle update
+$ sudo yum install -y rubygems ruby-devel gcc-c++ zlib-devel patch \
+    redhat-rpm-config make
+$ gem install bundler
+$ bundle install
+$ bundle update
 ```
 
 ### Syntax and Style Tests
@@ -114,9 +115,9 @@ We use [Puppet Lint][10], [Puppet Syntax][11] and [metadata-json-lint][12] to
 validate the module's syntax and style.
 
 ```
-[~/puppet-opendaylight]$ bundle exec rake lint
-[~/puppet-opendaylight]$ bundle exec rake syntax
-[~/puppet-opendaylight]$ bundle exec rake metadata
+$ bundle exec rake lint
+$ bundle exec rake syntax
+$ bundle exec rake metadata
 ```
 
 ### Unit Tests
@@ -126,7 +127,7 @@ We use rspec-puppet to provide unit test coverage.
 To run the unit tests and generate a coverage report, use:
 
 ```
-[~/puppet-opendaylight]$ bundle exec rake spec
+$ bundle exec rake spec
 # Snip test output
 Finished in 10.08 seconds (files took 0.50776 seconds to load)
 537 examples, 0 failures
@@ -142,7 +143,7 @@ Note that we have a very large number of tests and 100% test coverage.
 To run the syntax, style and unit tests in one rake task (recommended), use:
 
 ```
-[~/puppet-opendaylight]$ bundle exec rake test
+$ bundle exec rake test
 ```
 
 ### System Tests
@@ -152,31 +153,34 @@ they don't do much more than checking that the code compiles to a given state.
 To verify that the Puppet module behaves as desired once applied to a real,
 running system, we use [Beaker][13].
 
-Beaker stands up virtual machines using Vagrant, applies the OpenDaylight
-Puppet module with various combinations of params and uses [Serverspec][14]
-to validate the resulting system state.
+Beaker stands up virtual machines or containers using Vagrant or Docker,
+applies the OpenDaylight Puppet module with various combinations of params
+and uses [Serverspec][14] to validate the resulting system state.
 
 Beaker depends on Vagrant ([Vagrant downloads page][17]) for managing VMs,
 which in turn depends on VirtualBox ([VirtualBox downloads page][18]) and
 the `kmod-VirtualBox` package.
 
-To run our Beaker tests against the primary target OS (CentOS 7) using the
-recommended RPM-based install method, use:
+Beaker depends on [Docker][20] for managing containers.
+
+To run Beaker tests against CentOS 7 in a VM using the latest OpenDaylight
+Carbon RPM, use:
 
 ```
-[~/puppet-opendaylight]$ bundle exec rake centos
+$ bundle exec rake cent_6test_vm
 ```
 
-There are a number of pre-defined rake tasks to simplify running common
-Beaker tests.
+To do the same tests in a CentOS container:
 
 ```
-[~/puppet-opendaylight]$ bundle exec rake centos_7_docker
-[~/puppet-opendaylight]$ bundle exec rake centos
-[~/puppet-opendaylight]$ bundle exec rake centos_tarball
-[~/puppet-opendaylight]$ bundle exec rake fedora_22
-[~/puppet-opendaylight]$ bundle exec rake ubuntu_1404
-[~/puppet-opendaylight]$ bundle exec rake ubuntu_1404_docker
+$ bundle exec rake cent_6test_dock
+```
+
+To run VM or container-based tests for all OSs:
+
+```
+$ bundle exec rake acceptance_vm
+$ bundle exec rake acceptance_dock
 ```
 
 If you'd like to preserve the Beaker VM after a test run, perhaps for manual
@@ -184,27 +188,23 @@ inspection or a quicker follow-up test run, use the `BEAKER_destroy`
 environment variable.
 
 ```
-[~/puppet-opendaylight]$ BEAKER_destroy=no bundle exec rake centos
+$ BEAKER_destroy=no bundle exec rake centos
 ```
 
 You can then connect to the VM by navigating to the directory that contains
 its Vagrantfile and using standard Vagrant commands.
 
 ```
-[~/puppet-opendaylight]$ cd .vagrant/beaker_vagrant_files/centos-7.yml
-[~/puppet-opendaylight/.vagrant/beaker_vagrant_files/centos-7.yml]$ vagrant status
+$ cd .vagrant/beaker_vagrant_files/centos-7.yml
+$ vagrant status
 Current machine states:
 
 centos-7                  running (virtualbox)
-[~/puppet-opendaylight/.vagrant/beaker_vagrant_files/centos-7.yml]$ vagrant ssh
-[vagrant@centos-7 ~]$ sudo systemctl status opendaylight
-opendaylight.service - OpenDaylight SDN Controller
-   Loaded: loaded (/usr/lib/systemd/system/opendaylight.service; enabled)
-   Active: active (running) since Fri 2015-04-24 16:34:07 UTC; 1min 1s ago
-     Docs: https://wiki.opendaylight.org/view/Main_Page
-           http://www.opendaylight.org/
-[vagrant@centos-7 ~]$ logout
-[~/puppet-opendaylight/.vagrant/beaker_vagrant_files/centos-7.yml]$ vagrant destroy -f
+$ vagrant ssh
+$ sudo systemctl is-active opendaylight
+active
+$ logout
+$ vagrant destroy -f
 ```
 
 For more information about using Beaker, see [these docs][15].
@@ -252,3 +252,5 @@ results in >8500 automated tests per commit.
 [18]: www.virtualbox.org/wiki/Linux_Downloads
 
 [19]: http://webchat.freenode.net/?channels=opendaylight-integration
+
+[20]: https://docs.docker.com/engine/installation/
