@@ -38,3 +38,5 @@
 - Install ODL RPM from latest Beryllium SR repo
 2016-08-08 Release 3.7.2
 - Install ODL RPM from Boron testing repo
+2017-03-30 Release 4.0.0
+- New params, ODL version bump, deb support, more tests
