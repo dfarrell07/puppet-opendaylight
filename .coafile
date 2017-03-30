@@ -1,30 +1,53 @@
-[Default]
-ignore = .gitignore
+[default]
+ignore = .tox/**, .git/**, .gitignore, .gitreview, **.log,
+    node_modules/**, **.sw?, **.orig, **/.vagrant**
+
+[git]
+bears = GitCommitBear
+ignore_length_regex = Signed-off-by,
+    Also-by,
+    Co-authored-by,
+
+[spacing]
+bears = SpaceConsistencyBear
 use_spaces = True
+enforce_newline_at_EOF = False
+files = **
+default_actions = SpaceConsistencyBear: ApplyPatchAction
 
-[markdown]
-bears = MarkdownBear
-files = ./**/*.markdown, ./**/*.md
-default_actions = MarkdownBear: ApplyPatchAction
-
-[json]
-bears = JSONFormatBear
-files = ./**/*.json
-default_actions = JSONFormatBear: ApplyPatchAction
+[linelength]
+bears = LineLengthBear
+enabled = False
+max_line_length = 100
 
 [ruby]
-bears = RuboCopBear
-files = ./**/*.rb
+bears = RubySyntaxBear, RubySmellBear, RuboCopBear
+files = **.rb
+enabled = False
 
 [puppet]
 bears = PuppetLintBear
-files = ./**/*.pp
+enabled = False
 
-[xml]
-bears = XMLBear
-files = ./**/*.xml
+[markdown]
+bears = MarkdownBear
+files = **.markdown, **.md
+default_actions = MarkdownBear: ApplyPatchAction
+
+[rest]
+bears = RSTcheckBear, reSTLintBear
+files = **.rst
 
 [yaml]
 bears = YAMLLintBear
 yamllint_config = .yamllint
-files = ./**/*.yaml, ./**/*.yml
+files = **.yaml, **.yml
+
+[json]
+bears = JSONFormatBear
+files = **.json
+default_actions = JSONFormatBear: ApplyPatchAction
+
+[xml]
+bears = XMLBear
+files = **.xml

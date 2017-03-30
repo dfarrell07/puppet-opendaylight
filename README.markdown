@@ -8,15 +8,19 @@
 1. [Overview](#overview)
 2. [Module Description](#module-description)
 3. [Setup](#setup)
-  - [What `opendaylight` affects](#what-opendaylight-affects)
-  - [Beginning with `opendaylight`](#beginning-with-opendaylight)
+
+- [What `opendaylight` affects](#what-opendaylight-affects)
+- [Beginning with `opendaylight`](#beginning-with-opendaylight)
+
 4. [Usage](#usage)
-  - [Karaf Features](#karaf-features)
-  - [RPM Repo](#rpm-repo)
-  - [Deb Repo](#deb-repo)
-  - [Ports](#ports)
-  - [Log Verbosity](#log-verbosity)
-  - [Enabling ODL OVSDB HA](#enabling-odl-ovsdb-ha)
+
+- [Karaf Features](#karaf-features)
+- [RPM Repo](#rpm-repo)
+- [Deb Repo](#deb-repo)
+- [Ports](#ports)
+- [Log Verbosity](#log-verbosity)
+- [Enabling ODL OVSDB HA](#enabling-odl-ovsdb-ha)
+
 5. [Reference ](#reference)
 6. [Limitations](#limitations)
 7. [Development](#development)
@@ -61,48 +65,9 @@ with [applying the ODL Puppet module][12] to CentOS 7, Fedora 22, Fedora
 23 and Ubuntu 16.04 Vagrant boxes.
 
 ```
-[~/vagrant-opendaylight]$ vagrant status
-Current machine states:
-
-cent7_li_sr4              not created (virtualbox)
-cent7_be                  not created (virtualbox)
-cent7_be_sr1              not created (virtualbox)
-cent7_be_sr2              not created (virtualbox)
-cent7_rpm_he_sr4          not created (virtualbox)
-cent7_rpm_li_sr2          not created (virtualbox)
-cent7_rpm_li_sr3          not created (virtualbox)
-cent7_rpm_be              not created (virtualbox)
-cent7_rpm_be_sr1          not created (virtualbox)
-cent7_rpm_be_sr2          not created (virtualbox)
-cent7_rpm_ve_latest       not created (virtualbox)
-cent7_ansible             not created (virtualbox)
-cent7_ansible_latest      not created (virtualbox)
-cent7_ansible_path        not created (virtualbox)
-cent7_pup_rpm             not created (virtualbox)
-cent7_pup_custom_logs     not created (virtualbox)
-cent7_pup_enable_l3       not created (virtualbox)
-cent7_pup_tb              not created (virtualbox)
-f22_rpm_li                not created (virtualbox)
-f22_ansible               not created (virtualbox)
-f22_pup_rpm               not created (virtualbox)
-f23_rpm_li                not created (virtualbox)
-f23_rpm_li_sr1            not created (virtualbox)
-f23_rpm_li_sr2            not created (virtualbox)
-f23_rpm_li_sr3            not created (virtualbox)
-f23_rpm_be                not created (virtualbox)
-f23_rpm_be_rel            not created (virtualbox)
-f23_rpm_be_latest         not created (virtualbox)
-f23_ansible               not created (virtualbox)
-f23_pup_rpm               not created (virtualbox)
-debian8_ansible_repo      not created (virtualbox)
-debian8_ansible_path      not created (virtualbox)
-ubuntu16_ansible_repo     not created (virtualbox)
-ubuntu16_ansible_path     not created (virtualbox)
-ubuntu16_pup_deb          not created (virtualbox)
-
-[~/vagrant-opendaylight]$ vagrant up cent7_pup_rpm
-# A CentOS 7 VM is created and configured using the ODL Puppet mod's defaults
-[~/vagrant-opendaylight]$ vagrant ssh cent7_pup_rpm
+# Provision a CentOS VM using puppet-opendaylight
+$ vagrant up cent7_pup_rpm
+$ vagrant ssh cent7_pup_rpm
 [vagrant@localhost ~]$ sudo systemctl is-active opendaylight
 active
 ```
@@ -403,9 +368,9 @@ See our [git commit history][17] for contributor information.
 
 [2]: https://gemnasium.com/dfarrell07/puppet-opendaylight
 
-[4]: https://travis-ci.org/dfarrell07/puppet-opendaylight.svg
+[4]: https://travis-ci.org/dfarrell07/puppet-opendaylight.svg?branch=master
 
-[5]: https://gemnasium.com/dfarrell07/puppet-opendaylight.svg
+[5]: https://gemnasium.com/dfarrell07/puppet-opendaylight.svg?branch=master
 
 [7]: http://www.opendaylight.org/
 
@@ -429,8 +394,8 @@ See our [git commit history][17] for contributor information.
 
 [17]: https://github.com/dfarrell07/puppet-opendaylight/commits/master
 
-[18]: <http://cbs.centos.org/repos/nfv7-opendaylight-40-release/x86_64/os/Packages/> "OpenDaylight Beryllium CentOS CBS repo"
+[18]: http://cbs.centos.org/repos/nfv7-opendaylight-40-release/x86_64/os/Packages/ "OpenDaylight Beryllium CentOS CBS repo"
 
-[19]: <https://wiki.opendaylight.org/view/Deployment#RPM> "OpenDaylight RPMs and their repos"
+[19]: https://wiki.opendaylight.org/view/Deployment#RPM "OpenDaylight RPMs and their repos"
 
 [20]: https://launchpad.net/~odl-team/+archive/ubuntu/boron

@@ -182,7 +182,7 @@ def generic_validations()
       it { should be_installed }
     end
 
-  # Ubuntu 16.04 specific validation  
+  # Ubuntu 16.04 specific validation
   elsif ['ubuntu-16', 'ubuntu-16-docker'].include? ENV['RS_SET']
 
     # Verify ODL systemd .service file

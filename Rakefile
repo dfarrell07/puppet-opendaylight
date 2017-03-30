@@ -46,8 +46,6 @@ task :travis_lint do
   sh 'echo "y" | travis lint .travis.yml --debug'
 end
 
-# TODO: Add Coala helper
-
 # CentOS VMs
 
 desc "Beaker tests against CentOS 7 VM with latest Boron testing RPM"

@@ -559,7 +559,7 @@ describe 'opendaylight' do
       operatingsystemrelease = '16.04'
       operatingsystemmajrelease = '16'
       lsbdistcodename = 'xenial'
-      
+
       context 'installing Deb' do
         let(:facts) {{
           :osfamily => osfamily,
